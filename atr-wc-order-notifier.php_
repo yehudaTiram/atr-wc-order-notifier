@@ -1,0 +1,139 @@
+<?php
+/*
+ * Plugin Name: ATR WooCommerce Order Notifier
+ * Description: Sends notifications for WooCommerce order events to Telegram, Slack, (and other platforms).
+ * Requires at least: 5.8
+ * Requires PHP:      7.3
+ * Version:           1.0.0
+ * Author:            Yehuda Tiram atarimtr.co.il
+ * License:           GPL-2.0-or-later
+ * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
+ * Text Domain:       atr-wc-order-notifier
+ *
+ * @package           atr-wc-order-notifier
+ *
+ */
+
+// Hook into WooCommerce order status changes
+add_action('woocommerce_order_status_changed', 'wp_wc_order_status_changed', 10, 3);
+
+function wp_wc_order_status_changed($order_id, $old_status, $new_status)
+{
+    // Get order details
+    $order = wc_get_order($order_id);
+
+    // Check if the order status is one we want to notify about
+    if (in_array($new_status, array('Pending payment', 'On hold', 'Processing', 'Canceled', 'completed', 'failed', 'refunded'))) {
+        // Build notification message
+        $message = "New order status: {$new_status} for order #{$order_id}";
+        // Send notifications
+        wp_wc_send_notification($order, $new_status, $order_id);
+    }
+}
+
+function wp_wc_send_notification($order, $new_status, $order_id)
+{
+    // Get configured notification settings
+    $options = get_option('wp_wc_options');
+    $telegram_enabled = isset($options['wp_wc_telegram_enabled']) ? $options['wp_wc_telegram_enabled'] : '';
+    $telegram_webhook_url = isset($options['wp_wc_telegram_webhook_url']) ? $options['wp_wc_telegram_webhook_url'] : '';
+    $telegram_bot_token = isset($options['wp_wc_telegram_bot_token']) ? $options['wp_wc_telegram_bot_token'] : '';
+    $telegram_chat_id = isset($options['wp_wc_telegram_chat_id']) ? $options['wp_wc_telegram_chat_id'] : '';
+
+    // Send to Telegram
+    if ($telegram_enabled && $telegram_webhook_url && $telegram_bot_token && $telegram_chat_id) {
+        // Construct Telegram message with order details
+        $telegram_message = "New order status: {$new_status}\nOrder ID: {$order_id}\nCustomer Name: {$order->get_billing_first_name()} {$order->get_billing_last_name()}";
+
+        // Prepare data for wp_remote_post
+        $data = array(
+            'method' => 'POST',
+            'headers' => array(
+                'Content-Type' => 'application/json',
+            ),
+            'body' => json_encode(array(
+                'chat_id' => $telegram_chat_id,
+                'text' => $telegram_message,
+            )),
+        );
+
+        // Construct the Telegram API endpoint
+        $telegram_api_url = 'https://api.telegram.org/bot' . $telegram_bot_token . '/sendMessage';
+
+        // Send notification using wp_remote_post
+        $response = wp_remote_post($telegram_api_url, $data);
+
+        // Handle potential errors
+        $error_code = wp_remote_retrieve_response_code($response);
+        if (is_wp_error($response) || $error_code !== 200) {
+            // Log or display an error message indicating notification failure
+            error_log('Telegram notification failed: ' . print_r($response, true));
+        }
+    }
+
+    // Send to Slack
+    if ($slack_enabled && $slack_webhook_url) {
+        // ... Slack notification logic ...
+    }
+}
+
+// Add settings page
+add_action('admin_menu', 'wp_wc_add_menu_page');
+
+function wp_wc_add_menu_page()
+{
+    add_options_page('WooCommerce Order Notifier', 'Order Notifier', 'manage_options', 'wp-woon-settings', 'wp_wc_settings_page');
+}
+
+function wp_wc_settings_page()
+{
+?>
+    <div class="wrap">
+        <h1>WooCommerce Order Notifier Settings</h1>
+        <form method="post" action="options.php">
+            <?php settings_fields('wp_wc_options'); ?>
+            <?php do_settings_sections('wp_wc_settings'); ?>
+            <?php submit_button(); ?>
+        </form>
+    </div>
+<?php
+}
+
+add_action('admin_init', 'wp_wc_register_settings');
+function wp_wc_register_settings()
+{
+    register_setting('wp_wc_options', 'wp_wc_options');
+    add_settings_section('wp_wc_telegram_settings', 'Telegram Settings', '', 'wp_wc_settings');
+    add_settings_field('wp_wc_telegram_enabled', 'Enable Telegram', 'wp_wc_telegram_enabled_callback', 'wp_wc_settings', 'wp_wc_telegram_settings');
+    add_settings_field('wp_wc_telegram_webhook_url', 'Webhook URL', 'wp_wc_telegram_webhook_url_callback', 'wp_wc_settings', 'wp_wc_telegram_settings');
+    add_settings_field('wp_wc_telegram_bot_token', 'Bot Token', 'wp_wc_telegram_bot_token_callback', 'wp_wc_settings', 'wp_wc_telegram_settings');
+    add_settings_field('wp_wc_telegram_chat_id', 'Chat ID', 'wp_wc_telegram_chat_id_callback', 'wp_wc_settings', 'wp_wc_telegram_settings');
+}
+
+function wp_wc_telegram_enabled_callback()
+{
+    $options = get_option('wp_wc_options');
+    $telegram_enabled = isset($options['wp_wc_telegram_enabled']) ? $options['wp_wc_telegram_enabled'] : '';
+    echo '<input type="checkbox" name="wp_wc_options[wp_wc_telegram_enabled]" value="1" ' . checked(1, $telegram_enabled, false) . ' />';
+}
+
+function wp_wc_telegram_webhook_url_callback()
+{
+    $options = get_option('wp_wc_options');
+    $webhook_url = isset($options['wp_wc_telegram_webhook_url']) ? $options['wp_wc_telegram_webhook_url'] : '';
+    echo '<input type="text" name="wp_wc_options[wp_wc_telegram_webhook_url]" value="' . esc_attr($webhook_url) . '" />';
+}
+
+function wp_wc_telegram_bot_token_callback()
+{
+    $options = get_option('wp_wc_options');
+    $telegram_bot_token = isset($options['wp_wc_telegram_bot_token']) ? $options['wp_wc_telegram_bot_token'] : '';
+    echo '<input type="text" name="wp_wc_options[wp_wc_telegram_bot_token]" value="' . $telegram_bot_token . '" />';
+}
+
+function wp_wc_telegram_chat_id_callback()
+{
+    $options = get_option('wp_wc_options');
+    $telegram_chat_id = isset($options['wp_wc_telegram_chat_id']) ? $options['wp_wc_telegram_chat_id'] : '';
+    echo '<input type="text" name="wp_wc_options[wp_wc_telegram_chat_id]" value="' . $telegram_chat_id . '" />';
+}
