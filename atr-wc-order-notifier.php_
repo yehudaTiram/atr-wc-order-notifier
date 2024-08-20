@@ -15,9 +15,9 @@
  */
 
 // Hook into WooCommerce order status changes
-add_action('woocommerce_order_status_changed', 'wp_wc_order_status_changed', 10, 3);
+add_action('woocommerce_order_status_changed', 'atr_wc_notifier_order_status_changed', 10, 3);
 
-function wp_wc_order_status_changed($order_id, $old_status, $new_status)
+function atr_wc_notifier_order_status_changed($order_id, $old_status, $new_status)
 {
     // Get order details
     $order = wc_get_order($order_id);
@@ -27,18 +27,18 @@ function wp_wc_order_status_changed($order_id, $old_status, $new_status)
         // Build notification message
         $message = "New order status: {$new_status} for order #{$order_id}";
         // Send notifications
-        wp_wc_send_notification($order, $new_status, $order_id);
+        atr_wc_notifier_send_notification($order, $new_status, $order_id);
     }
 }
 
-function wp_wc_send_notification($order, $new_status, $order_id)
+function atr_wc_notifier_send_notification($order, $new_status, $order_id)
 {
     // Get configured notification settings
-    $options = get_option('wp_wc_options');
-    $telegram_enabled = isset($options['wp_wc_telegram_enabled']) ? $options['wp_wc_telegram_enabled'] : '';
-    $telegram_webhook_url = isset($options['wp_wc_telegram_webhook_url']) ? $options['wp_wc_telegram_webhook_url'] : '';
-    $telegram_bot_token = isset($options['wp_wc_telegram_bot_token']) ? $options['wp_wc_telegram_bot_token'] : '';
-    $telegram_chat_id = isset($options['wp_wc_telegram_chat_id']) ? $options['wp_wc_telegram_chat_id'] : '';
+    $options = get_option('atr_wc_notifier_options');
+    $telegram_enabled = isset($options['atr_wc_notifier_telegram_enabled']) ? $options['atr_wc_notifier_telegram_enabled'] : '';
+    $telegram_webhook_url = isset($options['atr_wc_notifier_telegram_webhook_url']) ? $options['atr_wc_notifier_telegram_webhook_url'] : '';
+    $telegram_bot_token = isset($options['atr_wc_notifier_telegram_bot_token']) ? $options['atr_wc_notifier_telegram_bot_token'] : '';
+    $telegram_chat_id = isset($options['atr_wc_notifier_telegram_chat_id']) ? $options['atr_wc_notifier_telegram_chat_id'] : '';
 
     // Send to Telegram
     if ($telegram_enabled && $telegram_webhook_url && $telegram_bot_token && $telegram_chat_id) {
@@ -78,62 +78,62 @@ function wp_wc_send_notification($order, $new_status, $order_id)
 }
 
 // Add settings page
-add_action('admin_menu', 'wp_wc_add_menu_page');
+add_action('admin_menu', 'atr_wc_notifier_add_menu_page');
 
-function wp_wc_add_menu_page()
+function atr_wc_notifier_add_menu_page()
 {
-    add_options_page('WooCommerce Order Notifier', 'Order Notifier', 'manage_options', 'wp-woon-settings', 'wp_wc_settings_page');
+    add_options_page('WooCommerce Order Notifier', 'Order Notifier', 'manage_options', 'wp-woon-settings', 'atr_wc_notifier_settings_page');
 }
 
-function wp_wc_settings_page()
+function atr_wc_notifier_settings_page()
 {
 ?>
     <div class="wrap">
         <h1>WooCommerce Order Notifier Settings</h1>
         <form method="post" action="options.php">
-            <?php settings_fields('wp_wc_options'); ?>
-            <?php do_settings_sections('wp_wc_settings'); ?>
+            <?php settings_fields('atr_wc_notifier_options'); ?>
+            <?php do_settings_sections('atr_wc_notifier_settings'); ?>
             <?php submit_button(); ?>
         </form>
     </div>
 <?php
 }
 
-add_action('admin_init', 'wp_wc_register_settings');
-function wp_wc_register_settings()
+add_action('admin_init', 'atr_wc_notifier_register_settings');
+function atr_wc_notifier_register_settings()
 {
-    register_setting('wp_wc_options', 'wp_wc_options');
-    add_settings_section('wp_wc_telegram_settings', 'Telegram Settings', '', 'wp_wc_settings');
-    add_settings_field('wp_wc_telegram_enabled', 'Enable Telegram', 'wp_wc_telegram_enabled_callback', 'wp_wc_settings', 'wp_wc_telegram_settings');
-    add_settings_field('wp_wc_telegram_webhook_url', 'Webhook URL', 'wp_wc_telegram_webhook_url_callback', 'wp_wc_settings', 'wp_wc_telegram_settings');
-    add_settings_field('wp_wc_telegram_bot_token', 'Bot Token', 'wp_wc_telegram_bot_token_callback', 'wp_wc_settings', 'wp_wc_telegram_settings');
-    add_settings_field('wp_wc_telegram_chat_id', 'Chat ID', 'wp_wc_telegram_chat_id_callback', 'wp_wc_settings', 'wp_wc_telegram_settings');
+    register_setting('atr_wc_notifier_options', 'atr_wc_notifier_options');
+    add_settings_section('atr_wc_notifier_telegram_settings', 'Telegram Settings', '', 'atr_wc_notifier_settings');
+    add_settings_field('atr_wc_notifier_telegram_enabled', 'Enable Telegram', 'atr_wc_notifier_telegram_enabled_callback', 'atr_wc_notifier_settings', 'atr_wc_notifier_telegram_settings');
+    add_settings_field('atr_wc_notifier_telegram_webhook_url', 'Webhook URL', 'atr_wc_notifier_telegram_webhook_url_callback', 'atr_wc_notifier_settings', 'atr_wc_notifier_telegram_settings');
+    add_settings_field('atr_wc_notifier_telegram_bot_token', 'Bot Token', 'atr_wc_notifier_telegram_bot_token_callback', 'atr_wc_notifier_settings', 'atr_wc_notifier_telegram_settings');
+    add_settings_field('atr_wc_notifier_telegram_chat_id', 'Chat ID', 'atr_wc_notifier_telegram_chat_id_callback', 'atr_wc_notifier_settings', 'atr_wc_notifier_telegram_settings');
 }
 
-function wp_wc_telegram_enabled_callback()
+function atr_wc_notifier_telegram_enabled_callback()
 {
-    $options = get_option('wp_wc_options');
-    $telegram_enabled = isset($options['wp_wc_telegram_enabled']) ? $options['wp_wc_telegram_enabled'] : '';
-    echo '<input type="checkbox" name="wp_wc_options[wp_wc_telegram_enabled]" value="1" ' . checked(1, $telegram_enabled, false) . ' />';
+    $options = get_option('atr_wc_notifier_options');
+    $telegram_enabled = isset($options['atr_wc_notifier_telegram_enabled']) ? $options['atr_wc_notifier_telegram_enabled'] : '';
+    echo '<input type="checkbox" name="atr_wc_notifier_options[atr_wc_notifier_telegram_enabled]" value="1" ' . checked(1, $telegram_enabled, false) . ' />';
 }
 
-function wp_wc_telegram_webhook_url_callback()
+function atr_wc_notifier_telegram_webhook_url_callback()
 {
-    $options = get_option('wp_wc_options');
-    $webhook_url = isset($options['wp_wc_telegram_webhook_url']) ? $options['wp_wc_telegram_webhook_url'] : '';
-    echo '<input type="text" name="wp_wc_options[wp_wc_telegram_webhook_url]" value="' . esc_attr($webhook_url) . '" />';
+    $options = get_option('atr_wc_notifier_options');
+    $webhook_url = isset($options['atr_wc_notifier_telegram_webhook_url']) ? $options['atr_wc_notifier_telegram_webhook_url'] : '';
+    echo '<input type="text" name="atr_wc_notifier_options[atr_wc_notifier_telegram_webhook_url]" value="' . esc_attr($webhook_url) . '" />';
 }
 
-function wp_wc_telegram_bot_token_callback()
+function atr_wc_notifier_telegram_bot_token_callback()
 {
-    $options = get_option('wp_wc_options');
-    $telegram_bot_token = isset($options['wp_wc_telegram_bot_token']) ? $options['wp_wc_telegram_bot_token'] : '';
-    echo '<input type="text" name="wp_wc_options[wp_wc_telegram_bot_token]" value="' . $telegram_bot_token . '" />';
+    $options = get_option('atr_wc_notifier_options');
+    $telegram_bot_token = isset($options['atr_wc_notifier_telegram_bot_token']) ? $options['atr_wc_notifier_telegram_bot_token'] : '';
+    echo '<input type="text" name="atr_wc_notifier_options[atr_wc_notifier_telegram_bot_token]" value="' . $telegram_bot_token . '" />';
 }
 
-function wp_wc_telegram_chat_id_callback()
+function atr_wc_notifier_telegram_chat_id_callback()
 {
-    $options = get_option('wp_wc_options');
-    $telegram_chat_id = isset($options['wp_wc_telegram_chat_id']) ? $options['wp_wc_telegram_chat_id'] : '';
-    echo '<input type="text" name="wp_wc_options[wp_wc_telegram_chat_id]" value="' . $telegram_chat_id . '" />';
+    $options = get_option('atr_wc_notifier_options');
+    $telegram_chat_id = isset($options['atr_wc_notifier_telegram_chat_id']) ? $options['atr_wc_notifier_telegram_chat_id'] : '';
+    echo '<input type="text" name="atr_wc_notifier_options[atr_wc_notifier_telegram_chat_id]" value="' . $telegram_chat_id . '" />';
 }

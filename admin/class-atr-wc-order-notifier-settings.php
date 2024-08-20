@@ -152,46 +152,59 @@ class Atr_Wc_Order_Notifier_Admin_Settings
             'description'            => __('General settings', $this->textdomain),
             'fields'                => array(
                 array(
-                    'id'             => 'wp_wc_telegram_bot_token',
+                    'id'             => 'atr_wc_notifier_telegram_bot_token',
                     'label'            => __('Bot Token', $this->textdomain),
-                    'description'    => __('tekegram Bot Token', $this->textdomain),
+                    'description'    => __('telegram Bot Token', $this->textdomain),
                     'type' => 'text',
                     'default' => '',
                     'placeholder' => 'Bot Token',
                 ),           
                 array(
-                    'id'             => 'wp_wc_telegram_chat_id',
+                    'id'             => 'atr_wc_notifier_telegram_chat_id',
                     'label'            => __('Chat ID', $this->textdomain),
-                    'description'    => __('tekegram Chat ID', $this->textdomain),
+                    'description'    => __('telegram Chat ID', $this->textdomain),
                     'type' => 'text',
                     'default' => '',
                     'placeholder' => 'Chat ID',
                 ),                     
                 array(
-                    'id'             => 'wp_wc_telegram_enabled',
+                    'id'             => 'atr_wc_notifier_telegram_enabled',
                     'label'            => __('Enable Telegram', $this->textdomain),
                     'description'    => __('Enable Telegram', $this->textdomain),
                     'type' => 'checkbox',
                     'default' => 'off',
                 ),
-
-
+                array(
+                    'id' => 'atr_wc_notifier_encryption_key',
+                    'label' => __('Encryption Key', $this->textdomain),
+                    'description' => __('Enter a strong encryption key. This can only be set once.', $this->textdomain),
+                    'type' => 'text',
+                    'default' => '',
+                    'placeholder' => 'Encryption Key',
+                ),
+                array(
+                    'id' => 'atr_wc_notifier_statuses',
+                    'label' => __('Select statuses', $this->textdomain),
+                    'description' => __('Select statuses to notify about.', $this->textdomain),
+                    'type' => 'checkbox_multi',
+                    'options' => array(
+                        'pending' => __('Pending payment', $this->textdomain),
+                        'on-hold' => __('On hold', $this->textdomain),
+                        'processing' => __('Processing', $this->textdomain),
+                        'cancelled' => __('Cancelled', $this->textdomain),
+                        'completed' => __('Completed', $this->textdomain),
+                        'failed' => __('Failed', $this->textdomain),
+                        'refunded' => __('Refunded', $this->textdomain),
+                        'checkout-draft' => __('Checkout draft', $this->textdomain),
+                    ),
+                    'default' => '',
+                ),
             )
         );
 
         $settings = apply_filters('plugin_settings_fields', $settings);
 
         return $settings;
-    }
-
-    public function check_wp_version($ver_num)
-    {
-        $wp_version = get_bloginfo('version');
-        if ($wp_version < $ver_num) {
-            return true;
-        } else {
-            return false;
-        }
     }
 
     /**
@@ -221,8 +234,6 @@ class Atr_Wc_Order_Notifier_Admin_Settings
 
             add_option($this->plugin_name, $options);
         }
-
-
         return $options;
     }
 
@@ -302,7 +313,7 @@ class Atr_Wc_Order_Notifier_Admin_Settings
                     if (is_array($data) && in_array($k, $data)) {
                         $checked = true;
                     }
-                    $html .= '<label for="' . esc_attr($field['id'] . '_' . $k) . '"><input type="checkbox" ' . checked($checked, true, false) . ' name="' . esc_attr($option_name) . '[]" value="' . esc_attr($k) . '" id="' . esc_attr($field['id'] . '_' . $k) . '" /> ' . $v . '</label> ';
+                    $html .= '<label for="' . esc_attr($field['id'] . '_' . $k) . '"><input type="checkbox" ' . checked($checked, true, false) . ' name="' . esc_attr($option_name) . '[]" value="' . esc_attr($k) . '" id="' . esc_attr($field['id'] . '_' . $k) . '" /> ' . $v . '</label></br> ';
                 }
                 break;
 
@@ -354,31 +365,7 @@ class Atr_Wc_Order_Notifier_Admin_Settings
                 }
                 $html .= '</select> ';
                 break;
-            case 'categories_checkbox_multi_select':
-                if ($this->is_woocommerce_activated()) {
-                    foreach ($field['options'] as $k => $v) {
-                        $html .= '<input type="text" id="atrCatSearchInput"  placeholder="' . __('Search for categories...', $this->textdomain) . '" title="Type in a category name"><a href="javascript:void(0);" class="atr-cats-select-actions atr-expand-all-cats" title="Expand all categories">Expand all</a><a href="javascript:void(0);" class="atr-cats-select-actions atr-close_all-cats" title="Close all categories">Close all</a><a href="javascript:void(0);" class="atr-cats-select-actions atr-check-all-cats" title="Check all categories">Check all</a><a href="javascript:void(0);" class="atr-cats-select-actions atr-uncheck-cats" title="Uncheck all categories">Uncheck all</a>';
-                        $html .= '<ul class="atr-cat-list">';
-                        if ($v) {
-                            foreach ($v as $term_obj => $term_prop) {
-                                $checked = false;
-                                if (is_array($data) && in_array($term_prop->term_id, $data)) {
-                                    $checked = true;
-                                }
-                                $html .= '<li parent-id="' . $term_prop->parent . '" li-id="' . $term_prop->term_id . '"><label for="' . esc_attr($field['id'] . '_' . $term_prop->name) . '">';
-                                $html .= '<input class="categories-select-chkbox" type="checkbox" ' . checked($checked, true, false) . ' name="' . esc_attr($option_name) . '[]" value="' . esc_attr($term_prop->term_id) . '" id="' . esc_attr($field['id'] . '_' . $term_prop->term_id) . '" /> ';
-                                $html .= $term_prop->name . '</label></li>';
-                            }
-                        }
-
-                        $html .= '</ul>';
-                    }
-                } else {
-                    $html .= __('Please activate Woocommerce...', $this->textdomain);
-                }
-
-                break;
-        }
+          }
 
         switch ($field['type']) {
 

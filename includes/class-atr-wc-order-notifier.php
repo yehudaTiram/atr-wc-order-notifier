@@ -130,6 +130,11 @@ class Atr_Wc_Order_Notifier {
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-atr-wc-order-notifier-public.php';
 
 		/**
+		 * The utility class
+		 */
+		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-atr-wc-order-notifier-utils.php';
+
+		/**
 		 * Telegram notification class
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/notifications/class-atr-wc-order-notifier-telegram.php';
@@ -171,7 +176,7 @@ class Atr_Wc_Order_Notifier {
 
 		$notification_telegram = new Atr_Wc_Order_Notifier_Admin_Telegram($this->get_plugin_name(), $this->get_version());
 		// Hook into WooCommerce order status changes
-		$this->loader->add_action('woocommerce_order_status_changed', $notification_telegram, 'wp_wc_order_status_changed', 10, 3);
+		$this->loader->add_action('woocommerce_order_status_changed', $notification_telegram, 'atr_wc_notifier_order_status_changed', 10, 3);
 
 		$plugin_settings = new Atr_Wc_Order_Notifier_Admin_Settings($this->get_plugin_name(), $this->plugin_slug, $this->get_version());
 		$this->loader->add_action('admin_menu', $plugin_settings, 'add_menu_item');
