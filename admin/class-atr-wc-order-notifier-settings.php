@@ -152,14 +152,6 @@ class Atr_Wc_Order_Notifier_Admin_Settings
             'description'            => __('General settings', $this->textdomain),
             'fields'                => array(
                 array(
-                    'id'             => 'wp_wc_telegram_webhook_url',
-                    'label'            => __('Webhook URL', $this->textdomain),
-                    'description'    => __('tekegram Webhook URL', $this->textdomain),
-                    'type' => 'text',
-                    'default' => '',
-                    'placeholder' => 'Webhook URL',
-                ),
-                array(
                     'id'             => 'wp_wc_telegram_bot_token',
                     'label'            => __('Bot Token', $this->textdomain),
                     'description'    => __('tekegram Bot Token', $this->textdomain),

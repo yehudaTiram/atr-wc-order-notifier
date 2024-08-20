@@ -62,18 +62,27 @@ class Atr_Wc_Order_Notifier_Admin_Telegram
 
     private function wp_wc_send_notification($order, $new_status, $order_id)
     {
+        // Get and Loop Over Order Items
+        $order_items = $order->get_items();
         // Get configured notification settings
         $options = get_option($this->plugin_name);
         if ($options) {
             $telegram_enabled = isset($options['wp_wc_telegram_enabled']) ? $options['wp_wc_telegram_enabled'] : '';
-            $telegram_webhook_url = isset($options['wp_wc_telegram_webhook_url']) ? $options['wp_wc_telegram_webhook_url'] : '';
+            // $telegram_webhook_url = isset($options['wp_wc_telegram_webhook_url']) ? $options['wp_wc_telegram_webhook_url'] : '';
             $telegram_bot_token = isset($options['wp_wc_telegram_bot_token']) ? $options['wp_wc_telegram_bot_token'] : '';
             $telegram_chat_id = isset($options['wp_wc_telegram_chat_id']) ? $options['wp_wc_telegram_chat_id'] : '';
         }
         // Send to Telegram
-        if ($telegram_enabled && $telegram_webhook_url && $telegram_bot_token && $telegram_chat_id) {
+        if ($telegram_enabled && $telegram_bot_token && $telegram_chat_id) {
             // Construct Telegram message with order details
-            $telegram_message = "New order status: {$new_status}\nOrder ID: {$order_id}\nCustomer Name: {$order->get_billing_first_name()} {$order->get_billing_last_name()}";
+            $notification_message = "New order status: {$new_status}\nOrder ID: {$order_id}\nCustomer Name: {$order->get_billing_first_name()} {$order->get_billing_last_name()}";
+            $notification_message .= "\nItems:\n";
+            foreach ($order_items as $item_id => $item) {
+                $product_name = $item->get_name();
+                $quantity = $item->get_quantity();
+                $total = $item->get_total();
+                $notification_message .= "{$product_name} x {$quantity} = {$total}\n";
+            }
 
             // Prepare data for wp_remote_post
             $data = array(
@@ -83,7 +92,7 @@ class Atr_Wc_Order_Notifier_Admin_Telegram
                 ),
                 'body' => json_encode(array(
                     'chat_id' => $telegram_chat_id,
-                    'text' => $telegram_message,
+                    'text' => $notification_message,
                 )),
             );
 
