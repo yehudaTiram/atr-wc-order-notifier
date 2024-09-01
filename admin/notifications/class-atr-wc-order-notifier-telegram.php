@@ -40,6 +40,7 @@ class Atr_Wc_Order_Notifier_Admin_Telegram
      * @var      string    $version    The current version of this plugin.
      */
     protected $version;
+
     public function __construct($plugin_name, $plugin_slug)
     {
         $this->plugin_slug = $plugin_slug;
@@ -48,53 +49,44 @@ class Atr_Wc_Order_Notifier_Admin_Telegram
     // Hook into WooCommerce order status changes
     public function atr_wc_notifier_order_status_changed($order_id, $old_status, $new_status)
     {
-        // Get order details
         $order = wc_get_order($order_id);
-        // $this->atr_wc_notifier_send_notification($order, $new_status, $order_id);
-        // Check if the order status is one we want to notify about
-        // Retrieve the entire array from the database
         $options = get_option($this->plugin_name, array());
 
         // Check if the specific key exists and get its value
         $selected_statuses = isset($options['atr_wc_notifier_statuses']) ? $options['atr_wc_notifier_statuses'] : array();
 
-        // Now, you can work with $selected_statuses as an array
         if (in_array($new_status, $selected_statuses)) {
             $this->atr_wc_notifier_send_notification($order, $new_status, $order_id);
         }
-
-        // if (in_array($new_status, array('pending', 'on-hold', 'processing', 'cancelled', 'completed', 'failed', 'refunded', 'checkout-draft'))) {
-        //     // Send notification
-        //      //$this->atr_wc_notifier_send_notification($order, $new_status, $order_id);
-
-        // }
     }
 
     private function atr_wc_notifier_send_notification($order, $new_status, $order_id)
     {
         // Get and Loop Over Order Items
         $order_items = $order->get_items();
+
+
+
         // Get configured notification settings
         $options = get_option($this->plugin_name);
         if ($options) {
             $telegram_enabled = isset($options['atr_wc_notifier_telegram_enabled']) ? $options['atr_wc_notifier_telegram_enabled'] : '';
-            // $telegram_webhook_url = isset($options['atr_wc_notifier_telegram_webhook_url']) ? $options['atr_wc_notifier_telegram_webhook_url'] : '';
-            $telegram_bot_token = isset($options['atr_wc_notifier_telegram_bot_token']) ? $options['atr_wc_notifier_telegram_bot_token'] : '';
+
+            $encrypted_token = isset($options['atr_wc_notifier_telegram_bot_token']) ? $options['atr_wc_notifier_telegram_bot_token'] : '';
+            $encryption_key = isset($options['atr_wc_notifier_encryption_key']) ? $options['atr_wc_notifier_encryption_key'] : '';
+
+            $telegram_bot_token = '';
+            if ($encrypted_token && $encryption_key) {
+                $telegram_bot_token = $this->decrypt_telegram_token($encrypted_token, $encryption_key);
+            }
+
+            // Uencypted way - $telegram_bot_token = isset($options['atr_wc_notifier_telegram_bot_token']) ? $options['atr_wc_notifier_telegram_bot_token'] : '';
             $telegram_chat_id = isset($options['atr_wc_notifier_telegram_chat_id']) ? $options['atr_wc_notifier_telegram_chat_id'] : '';
         }
         // Send to Telegram
         if ($telegram_enabled && $telegram_bot_token && $telegram_chat_id) {
-            // Construct Telegram message with order details
-            $notification_message = $new_status == 'failed' ? '🔴 ' : '';
-            $notification_message .= "New order status: {$new_status}\nOrder ID: {$order_id}\nCustomer Name: {$order->get_billing_first_name()} {$order->get_billing_last_name()}";
-            $notification_message .= "\nItems:\n";
-            foreach ($order_items as $item_id => $item) {
-                $product_name = $item->get_name();
-                $quantity = $item->get_quantity();
-                $total = $item->get_total();
-                $notification_message .= "{$product_name} x {$quantity} = {$total}\n";
-            }
-
+            $text_message = new Atr_Wc_Order_Notifier_Admin_Message($this->plugin_name, $this->plugin_slug);
+            $notification_message = $text_message->notification_messaage($new_status, $order);
             // Prepare data for wp_remote_post
             $data = array(
                 'method' => 'POST',
@@ -120,5 +112,18 @@ class Atr_Wc_Order_Notifier_Admin_Telegram
                 error_log('Telegram notification failed: ' . print_r($response, true));
             }
         }
+    }
+
+    /**
+     * Decrypts the Telegram bot token using the provided encryption key.
+     *
+     * @param string $encrypted_token The encrypted Telegram bot token.
+     * @param string $key The encryption key.
+     * @return string The decrypted Telegram bot token.
+     */
+    private function decrypt_telegram_token($encrypted_token, $key)
+    {
+        list($encrypted_data, $iv) = explode('::', base64_decode($encrypted_token), 2);
+        return openssl_decrypt($encrypted_data, 'aes-256-cbc', $key, 0, $iv);
     }
 }

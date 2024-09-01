@@ -135,6 +135,11 @@ class Atr_Wc_Order_Notifier {
 		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-atr-wc-order-notifier-utils.php';
 
 		/**
+		 * Text message class
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/notifications/class-atr-wc-order-notifier-message.php';
+
+		/**
 		 * Telegram notification class
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/notifications/class-atr-wc-order-notifier-telegram.php';

@@ -390,6 +390,14 @@ class Atr_Wc_Order_Notifier_Admin_Settings
      */
     public function validate_fields($data)
     {
+        if (!empty($data['atr_wc_notifier_telegram_bot_token']) && !empty($data['atr_wc_notifier_encryption_key'])) {
+            $data['atr_wc_notifier_telegram_bot_token'] = $this->encrypt_telegram_token($data['atr_wc_notifier_telegram_bot_token'], $data['atr_wc_notifier_encryption_key']);
+        }
+
+        // Prevent changing the encryption key after it's set
+        if (isset($this->options['atr_wc_notifier_encryption_key']) && !empty($this->options['atr_wc_notifier_encryption_key'])) {
+            $data['atr_wc_notifier_encryption_key'] = $this->options['atr_wc_notifier_encryption_key'];
+        }
         // $data array contains values to be saved:
         // either sanitize/modify $data or return false
         // to prevent the new options to be saved
@@ -417,6 +425,27 @@ class Atr_Wc_Order_Notifier_Admin_Settings
         } else {
             return false;
         }
+    }
+
+    private function encrypt_telegram_token($token, $key)
+    {
+        $iv_length = openssl_cipher_iv_length('aes-256-cbc');
+        $iv = openssl_random_pseudo_bytes($iv_length);
+        $encrypted_token = openssl_encrypt($token, 'aes-256-cbc', $key, 0, $iv);
+        return base64_encode($encrypted_token . '::' . $iv);
+    }
+
+    private function decrypt_telegram_token($encrypted_token, $key)
+    {
+        list($encrypted_data, $iv) = explode('::', base64_decode($encrypted_token), 2);
+        return openssl_decrypt($encrypted_data, 'aes-256-cbc', $key, 0, $iv);
+    }
+
+    public function get_decrypted_telegram_token()
+    {
+        $encrypted_token = $this->options['atr_wc_notifier_telegram_bot_token'];
+        $encryption_key = $this->options['atr_wc_notifier_encryption_key'];
+        return $this->decrypt_telegram_token($encrypted_token, $encryption_key);
     }
 
     /**
@@ -514,3 +543,35 @@ class Atr_Wc_Order_Notifier_Admin_Settings
         return $post_types_arr;
     }
 }
+/**
+ * Explain the atr_wc_notifier_encryption_key field in your plugin's settings.
+ */
+/*
+The atr_wc_notifier_encryption_key field in your plugin's settings is a crucial security feature designed to ensure that the Telegram bot token is stored securely within your WordPress database.
+
+Purpose of the atr_wc_notifier_encryption_key Field:
+Encryption of Sensitive Data:
+
+The atr_wc_notifier_encryption_key field allows the admin to input a custom encryption key. This key is used to encrypt the Telegram bot token before it is saved to the database.
+Encryption ensures that even if someone gains unauthorized access to the database, the bot token remains protected and unreadable without the encryption key.
+Decryption for Plugin Use:
+
+When the plugin needs to use the Telegram bot token (e.g., to send a message via Telegram), the stored encrypted token is decrypted using the atr_wc_notifier_encryption_key.
+This decryption process is done on-the-fly within the plugin, ensuring that the sensitive token is never exposed in plain text outside the plugin’s internal logic.
+Key Features:
+One-Time Setup:
+The encryption key is intended to be set once. After the key is set, it cannot be changed from the plugin settings interface. This prevents potential security risks associated with changing the key.
+Admin Responsibility:
+The admin is responsible for providing a strong, unique encryption key. This key is critical to the security of the stored Telegram bot token.
+Data Security:
+The key must be securely stored and should be known only to the admin. The plugin relies on this key to ensure that encrypted data remains secure and accessible only by the plugin.
+Practical Example:
+Setting Up:
+
+The admin enters the bot token and a strong encryption key in the plugin settings.
+When the settings are saved, the plugin uses the encryption key to encrypt the bot token before storing it in the database.
+During Operation:
+
+When the plugin needs to send a Telegram message, it retrieves the encrypted token from the database, decrypts it using the stored encryption key, and then uses the decrypted token to communicate with the Telegram API.
+By using the atr_wc_notifier_encryption_key, the plugin provides an additional layer of security, ensuring that sensitive information like the Telegram bot token is protected at rest and is only accessible by the plugin with the correct key.
+*/
