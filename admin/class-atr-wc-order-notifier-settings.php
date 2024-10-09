@@ -158,7 +158,7 @@ class Atr_Wc_Order_Notifier_Admin_Settings
                     'type' => 'text',
                     'default' => '',
                     'placeholder' => 'Bot Token',
-                ),           
+                ),
                 array(
                     'id'             => 'atr_wc_notifier_telegram_chat_id',
                     'label'            => __('Chat ID', $this->textdomain),
@@ -166,7 +166,7 @@ class Atr_Wc_Order_Notifier_Admin_Settings
                     'type' => 'text',
                     'default' => '',
                     'placeholder' => 'Chat ID',
-                ),                     
+                ),
                 array(
                     'id'             => 'atr_wc_notifier_telegram_enabled',
                     'label'            => __('Enable Telegram', $this->textdomain),
@@ -177,7 +177,7 @@ class Atr_Wc_Order_Notifier_Admin_Settings
                 array(
                     'id' => 'atr_wc_notifier_encryption_key',
                     'label' => __('Encryption Key', $this->textdomain),
-                    'description' => __('Enter a strong encryption key. This can only be set once.', $this->textdomain),
+                    'description' => __('Enter a strong encryption key.', $this->textdomain),
                     'type' => 'text',
                     'default' => '',
                     'placeholder' => 'Encryption Key',
@@ -288,7 +288,13 @@ class Atr_Wc_Order_Notifier_Admin_Settings
             case 'text':
             case 'password':
             case 'number':
-                $html .= '<input id="' . esc_attr($field['id']) . '" type="' . $field['type'] . '" name="' . esc_attr($option_name) . '" placeholder="' . esc_attr($field['placeholder']) . '" value="' . $data . '"/>' . "\n";
+                // Special handling for the Bot Token field
+                if ($field['id'] === 'atr_wc_notifier_telegram_bot_token') {
+                    $html .= '<input id="' . esc_attr($field['id']) . '" type="text" name="' . esc_attr($option_name) . '" placeholder="' . esc_attr($field['placeholder']) . '" value="" />' . "\n";
+                    $html .= '<p class="description">' . __('Enter your Telegram Bot Token. If left empty, the current token will be retained.', $this->textdomain) . '</p>';
+                } else {
+                    $html .= '<input id="' . esc_attr($field['id']) . '" type="' . $field['type'] . '" name="' . esc_attr($option_name) . '" placeholder="' . esc_attr($field['placeholder']) . '" value="' . esc_attr($data) . '"/>' . "\n";
+                }
                 break;
 
             case 'text_secret':
@@ -365,7 +371,7 @@ class Atr_Wc_Order_Notifier_Admin_Settings
                 }
                 $html .= '</select> ';
                 break;
-          }
+        }
 
         switch ($field['type']) {
 
@@ -390,26 +396,49 @@ class Atr_Wc_Order_Notifier_Admin_Settings
      */
     public function validate_fields($data)
     {
+        /**
+         * Dev not: the following commented if statement can be used only if you want to prevent the encryption key from being changed after it's set.
+         * If you want to allow the encryption key to be changed, you can remove the if statement.
+         * If you want to prevent the encryption key from being changed, you can uncomment the if statement and comment the next if statement.
+         * If you use this if statement, remember to add the explanation on the settings field description line "This can only be set once."
+         * Note: If you use this if statement, the setting can be updated only once. The reason for that is to prevent the encryption key from being changed after it's set.
+         */
+        // Prevent changing the encryption key after it's set
+        // if (isset($this->options['atr_wc_notifier_encryption_key']) && !empty($this->options['atr_wc_notifier_encryption_key'])) {
+        //     $data['atr_wc_notifier_encryption_key'] = $this->options['atr_wc_notifier_encryption_key'];
+        // }
+
+
+        // Check if the encryption key has changed or if it's the first time setting it
+        if (
+            !empty($data['atr_wc_notifier_encryption_key']) &&
+            (!isset($this->options['atr_wc_notifier_encryption_key']) ||
+            $data['atr_wc_notifier_encryption_key'] !== $this->options['atr_wc_notifier_encryption_key'])
+        ) {
+            // If there is an existing token and key, decrypt and re-encrypt with the new key
+            if (isset($this->options['atr_wc_notifier_telegram_bot_token']) && !empty($this->options['atr_wc_notifier_telegram_bot_token'])) {
+                $old_key = $this->options['atr_wc_notifier_encryption_key'];
+                $old_encrypted_token = $this->options['atr_wc_notifier_telegram_bot_token'];
+
+                // Decrypt the token using the old key
+                $decrypted_token = $this->decrypt_telegram_token($old_encrypted_token, $old_key);
+
+                // Re-encrypt the token with the new key
+                $new_encrypted_token = $this->encrypt_telegram_token($decrypted_token, $data['atr_wc_notifier_encryption_key']);
+
+                // Update the data array with the new encrypted token
+                $data['atr_wc_notifier_telegram_bot_token'] = $new_encrypted_token;
+            }
+        }
+
+        // Encrypt the bot token if a new one is provided (when first saving or if re-entered)
         if (!empty($data['atr_wc_notifier_telegram_bot_token']) && !empty($data['atr_wc_notifier_encryption_key'])) {
             $data['atr_wc_notifier_telegram_bot_token'] = $this->encrypt_telegram_token($data['atr_wc_notifier_telegram_bot_token'], $data['atr_wc_notifier_encryption_key']);
+        } else {
+            // If the token field is empty, retain the existing encrypted token
+            unset($data['atr_wc_notifier_telegram_bot_token']); // Prevent overwriting with an empty value
         }
 
-        // Prevent changing the encryption key after it's set
-        if (isset($this->options['atr_wc_notifier_encryption_key']) && !empty($this->options['atr_wc_notifier_encryption_key'])) {
-            $data['atr_wc_notifier_encryption_key'] = $this->options['atr_wc_notifier_encryption_key'];
-        }
-        // $data array contains values to be saved:
-        // either sanitize/modify $data or return false
-        // to prevent the new options to be saved
-
-        // Sanitize fields, eg. cast number field to integer
-        // $data['number_field'] = (int) $data['number_field'];
-
-        // Validate fields, eg. don't save options if the password field is empty
-        // if ( $data['password_field'] == '' ) {
-        // 	add_settings_error( $this->plugin_slug, 'no-password', __('A password is required.', $this->textdomain), 'error' );
-        // 	return false;
-        // }
 
         return $data;
     }
