@@ -144,6 +144,12 @@ class Atr_Wc_Order_Notifier {
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/notifications/class-atr-wc-order-notifier-telegram.php';
 
+
+		/**
+		 * Kint debug //TODO: remove for production
+		 */
+		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/kint.phar';
+
 		$this->loader = new Atr_Wc_Order_Notifier_Loader();
 
 	}

@@ -36,95 +36,21 @@ class Atr_Wc_Order_Notifier_Admin_utils
         $this->plugin_name = $plugin_name;
         $this->version = $version;
     }
-    /**
-     * Encrypt data
-     *
-     * @param [type] $data
-     * @return void
+
+     /**
+     * Decrypt telegram token
      */
-    function encrypt_data($data)
+    // Add a method to decrypt the token when needed
+    public function decrypt_telegram_token($encrypted_token)
     {
-        $key = 'your_strong_encryption_key'; // Replace with a strong, unique key
-        $ivlen = openssl_cipher_iv_length('AES-256-CBC');
-        $iv = openssl_random_pseudo_bytes($ivlen);
-        $ciphertext = openssl_encrypt($data, 'AES-256-CBC', $key, OPENSSL_RAW_DATA, $iv);
-        return base64_encode($iv . $ciphertext);
+        $key = $this->get_encryption_key();
+        list($encrypted_data, $iv) = explode('::', base64_decode($encrypted_token), 2);
+        return openssl_decrypt($encrypted_data, 'aes-256-cbc', $key, 0, $iv);
     }
 
-    /**
-     * Decrypt data
-     *
-     * @param [type] $data
-     * @return void
-     */
-    function decrypt_data($encrypted_data)
+    public function get_encryption_key()
     {
-        $key = 'your_strong_encryption_key'; // Replace with the same key
-        $ivlen = openssl_cipher_iv_length('AES-256-CBC');
-        $iv = substr($encrypted_data, 0, $ivlen);
-        $ciphertext = substr($encrypted_data, $ivlen);
-        $decrypted = openssl_decrypt(base64_decode($ciphertext), 'AES-256-CBC', $key, OPENSSL_RAW_DATA, $iv);
-        return $decrypted;
-    }
-
-    /**
-     * Check if post exist  and not empty
-     */
-    public function check_isset_post($field_name)
-    {
-        if (isset($_POST[$field_name]) && !empty($_POST[$field_name])) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-
-
-    /**
-     * Options getter
-     * @return array Options, either saved or default ones.
-     */
-    public function get_options()
-    {
-
-        $options = get_option($this->plugin_name);
-        if (isset($this->settings)) {
-            if (!$options && is_array($this->settings)) {
-                $options = array();
-                foreach ($this->settings as $section => $data) {
-                    foreach ($data['fields'] as $field) {
-                        $options[$field['id']] = $field['default'];
-                    }
-                }
-
-                add_option($this->plugin_name, $options);
-            }
-        }
-
-
-        return $options;
-    }
-
-    public function show_development_comments()
-    {
-        $show_development_comments = false;
-        $options = $this->get_options();
-        if ($options) {
-            if ((isset($options['atr_show_development_comments'])) && (!empty($options['atr_show_development_comments']))) {
-                ($options['atr_show_development_comments'] == 'on') ? $show_development_comments = true : $show_development_comments = false;
-            }
-        }
-        return $show_development_comments;
-    }
-
-    public function check_wp_version($ver_num)
-    {
-        $wp_version = get_bloginfo('version');
-        if ($wp_version < $ver_num) {
-            return true;
-        } else {
-            return false;
-        }
-    }
+        $wp_salt = defined('LOGGED_IN_SALT') ? LOGGED_IN_SALT : wp_salt('logged_in');
+        return hash('sha256', $wp_salt);
+    } 
 }

@@ -135,7 +135,8 @@ class Atr_Wc_Order_Notifier_Admin_Settings
     public function add_action_links($links)
     {
         $links[] = '<a href="' . esc_url(get_admin_url(null, 'admin.php?page=' . $this->plugin_name)) . '">' . __('Settings', $this->textdomain) . '</a>';
-        $links[] = '<a href="http://atarimtr.com" target="_blank">More plugins by Yehuda Tiram</a>';
+        $links[] = '<a href="http://atarimtr.com" target="_blank">More plugins by Yehuda Tiram (English)</a>';
+        $links[] = '<a href="http://atarimtr.co.il" target="_blank">More plugins by Yehuda Tiram (Hebrew)</a>';
         return $links;
     }
 
@@ -154,7 +155,7 @@ class Atr_Wc_Order_Notifier_Admin_Settings
                 array(
                     'id'             => 'atr_wc_notifier_telegram_bot_token',
                     'label'            => __('Bot Token', $this->textdomain),
-                    'description'    => __('telegram Bot Token', $this->textdomain),
+                    'description'    => __('<div class="security-notice"> <h2 style="font-weight:bold;color:red;">🔐 Important Security Notice before you save the settings</h2> <p>Your bot token will be securely encrypted and stored in our database. Please take note of the following:</p> <ul><li>This is your <strong>only opportunity</strong> to copy the token if you did not do so yet.</li><li>It cannot be retrieved or displayed again through this interface. However, you can retrieve it from Telegram, look at the guide <a target="_blank" href="https://github.com/yehudaTiram/atr-wc-order-notifier">here in my Github</a></li><li>Treat this token as you would any sensitive credential.</li></ul><div class="action-steps"> <h3>Recommended Actions:</h3> <ol><li>Store it in a secure, private location.</li> <li>Consider using a password manager or encrypted note for safekeeping.</li> </ol> </div> <p class="warning"><strong>Note:</strong> If you lose this token, you can retrieve it from Telegram or you\'ll need to generate a new one.</p> </div>', $this->textdomain),
                     'type' => 'text',
                     'default' => '',
                     'placeholder' => 'Bot Token',
@@ -175,14 +176,6 @@ class Atr_Wc_Order_Notifier_Admin_Settings
                     'default' => 'off',
                 ),
                 array(
-                    'id' => 'atr_wc_notifier_encryption_key',
-                    'label' => __('Encryption Key', $this->textdomain),
-                    'description' => __('Enter a strong encryption key.', $this->textdomain),
-                    'type' => 'text',
-                    'default' => '',
-                    'placeholder' => 'Encryption Key',
-                ),
-                array(
                     'id' => 'atr_wc_notifier_statuses',
                     'label' => __('Select statuses', $this->textdomain),
                     'description' => __('Select statuses to notify about.', $this->textdomain),
@@ -200,6 +193,119 @@ class Atr_Wc_Order_Notifier_Admin_Settings
                     'default' => '',
                 ),
             )
+        );
+        $settings['sec_tab'] = array(
+            'title'                    => __('Message details', $this->textdomain),
+            'description'            => __('The message details', $this->textdomain),
+            'fields' => array(
+                array(
+                    'id'          => 'order_id_in_message',
+                    'label'       => __('Order ID', $this->textdomain),
+                    'description' => __('Include Order ID in the message', $this->textdomain),
+                    'type'        => 'checkbox',
+                    'default'     => 'off',
+                ),
+                array(
+                    'id'          => 'customer_name_in_message',
+                    'label'       => __('Customer Name', $this->textdomain),
+                    'description' => __('Include Customer Name in the message', $this->textdomain),
+                    'type'        => 'checkbox',
+                    'default'     => 'off',
+                ),
+                array(
+                    'id'          => 'email_in_message',
+                    'label'       => __('Email', $this->textdomain),
+                    'description' => __('Include Customer Email in the message', $this->textdomain),
+                    'type'        => 'checkbox',
+                    'default'     => 'off',
+                ),
+                array(
+                    'id'          => 'phone_in_message',
+                    'label'       => __('Phone', $this->textdomain),
+                    'description' => __('Include Customer Phone in the message', $this->textdomain),
+                    'type'        => 'checkbox',
+                    'default'     => 'off',
+                ),
+                array(
+                    'id'          => 'billing_address_in_message',
+                    'label'       => __('Billing Address', $this->textdomain),
+                    'description' => __('Include Billing Address in the message', $this->textdomain),
+                    'type'        => 'checkbox',
+                    'default'     => 'off',
+                ),
+                array(
+                    'id'          => 'shipping_address_in_message',
+                    'label'       => __('Shipping Address', $this->textdomain),
+                    'description' => __('Include Shipping Address in the message', $this->textdomain),
+                    'type'        => 'checkbox',
+                    'default'     => 'off',
+                ),
+                array(
+                    'id'          => 'total_amount_in_message',
+                    'label'       => __('Total Amount', $this->textdomain),
+                    'description' => __('Include Total Order Amount in the message', $this->textdomain),
+                    'type'        => 'checkbox',
+                    'default'     => 'off',
+                ),
+                array(
+                    'id'          => 'order_status_in_message',
+                    'label'       => __('Order Status', $this->textdomain),
+                    'description' => __('Include Order Status in the message', $this->textdomain),
+                    'type'        => 'checkbox',
+                    'default'     => 'off',
+                ),
+                array(
+                    'id'          => 'date_created_in_message',
+                    'label'       => __('Date Created', $this->textdomain),
+                    'description' => __('Include Order Creation Date in the message', $this->textdomain),
+                    'type'        => 'checkbox',
+                    'default'     => 'off',
+                ),
+                array(
+                    'id'          => 'date_modified_in_message',
+                    'label'       => __('Date Modified', $this->textdomain),
+                    'description' => __('Include Order Modification Date in the message', $this->textdomain),
+                    'type'        => 'checkbox',
+                    'default'     => 'off',
+                ),
+                array(
+                    'id'          => 'product_name_in_message',
+                    'label'       => __('Product Name', $this->textdomain),
+                    'description' => __('Include Product Name(s) in the message', $this->textdomain),
+                    'type'        => 'checkbox',
+                    'default'     => 'off',
+                ),
+                array(
+                    'id'          => 'product_quantity_in_message',
+                    'label'       => __('Product Quantity', $this->textdomain),
+                    'description' => __('Include Product Quantity in the message', $this->textdomain),
+                    'type'        => 'checkbox',
+                    'default'     => 'off',
+                ),
+                array(
+                    'id'          => 'payment_method_in_message',
+                    'label'       => __('Payment Method', $this->textdomain),
+                    'description' => __('Include Payment Method in the message', $this->textdomain),
+                    'type'        => 'checkbox',
+                    'default'     => 'off',
+                ),
+                array(
+                    'id'          => 'customer_note_in_message',
+                    'label'       => __('Customer Note', $this->textdomain),
+                    'description' => __('Include Customer Note in the message', $this->textdomain),
+                    'type'        => 'checkbox',
+                    'default'     => 'off',
+                ),
+                array(
+                    'id'          => 'order_link_in_message',
+                    'label'       => __('Order Link', $this->textdomain),
+                    'description' => __('Include a clickable link to the order details in the message', $this->textdomain),
+                    'type'        => 'checkbox',
+                    'default'     => 'off',
+                )
+
+            ),
+
         );
 
         $settings = apply_filters('plugin_settings_fields', $settings);
@@ -391,69 +497,61 @@ class Atr_Wc_Order_Notifier_Admin_Settings
 
     /**
      * Validate individual settings field
+     * Handles the bot token field separately from other fields.
+     * If the bot token field is empty, it either uses the existing token or removes the field if no token exists.
+     * If a new token is provided, it encrypts it.
+     * Merges the updated data with the current options, ensuring all other field changes are preserved.
+     * This approach ensures that:
+     * Changes to other fields are always saved, regardless of the bot token field's state.
+     * The bot token is handled correctly (preserved when empty, encrypted when new).
+     * All existing options are maintained, even if not present in the submitted data.
      * @param  array $data Inputted value
      * @return array       Validated value
      */
     public function validate_fields($data)
     {
-        /**
-         * Dev not: the following commented if statement can be used only if you want to prevent the encryption key from being changed after it's set.
-         * If you want to allow the encryption key to be changed, you can remove the if statement.
-         * If you want to prevent the encryption key from being changed, you can uncomment the if statement and comment the next if statement.
-         * If you use this if statement, remember to add the explanation on the settings field description line "This can only be set once."
-         * Note: If you use this if statement, the setting can be updated only once. The reason for that is to prevent the encryption key from being changed after it's set.
-         */
-        // Prevent changing the encryption key after it's set
-        // if (isset($this->options['atr_wc_notifier_encryption_key']) && !empty($this->options['atr_wc_notifier_encryption_key'])) {
-        //     $data['atr_wc_notifier_encryption_key'] = $this->options['atr_wc_notifier_encryption_key'];
-        // }
+        $utils = new Atr_Wc_Order_Notifier_Admin_utils($this->plugin_name, $this->version);
+        $encryption_key = $utils->get_encryption_key();
 
+        // Get the current options using the specified format
+        $current_options = get_option($this->plugin_name, $this->version, array());
 
-        // Check if the encryption key has changed or if it's the first time setting it
-        if (
-            !empty($data['atr_wc_notifier_encryption_key']) &&
-            (!isset($this->options['atr_wc_notifier_encryption_key']) ||
-            $data['atr_wc_notifier_encryption_key'] !== $this->options['atr_wc_notifier_encryption_key'])
-        ) {
-            // If there is an existing token and key, decrypt and re-encrypt with the new key
-            if (isset($this->options['atr_wc_notifier_telegram_bot_token']) && !empty($this->options['atr_wc_notifier_telegram_bot_token'])) {
-                $old_key = $this->options['atr_wc_notifier_encryption_key'];
-                $old_encrypted_token = $this->options['atr_wc_notifier_telegram_bot_token'];
-
-                // Decrypt the token using the old key
-                $decrypted_token = $this->decrypt_telegram_token($old_encrypted_token, $old_key);
-
-                // Re-encrypt the token with the new key
-                $new_encrypted_token = $this->encrypt_telegram_token($decrypted_token, $data['atr_wc_notifier_encryption_key']);
-
-                // Update the data array with the new encrypted token
-                $data['atr_wc_notifier_telegram_bot_token'] = $new_encrypted_token;
+        // Handle the bot token field
+        if (!empty($data['atr_wc_notifier_telegram_bot_token'])) {
+            // If a new token is provided, encrypt it
+            $data['atr_wc_notifier_telegram_bot_token'] = $this->encrypt_telegram_token($data['atr_wc_notifier_telegram_bot_token'], $encryption_key);
+        } else {
+            // If the token field is empty, use the existing encrypted token (if any)
+            if (isset($current_options['atr_wc_notifier_telegram_bot_token'])) {
+                $data['atr_wc_notifier_telegram_bot_token'] = $current_options['atr_wc_notifier_telegram_bot_token'];
             }
         }
 
-        // Encrypt the bot token if a new one is provided (when first saving or if re-entered)
-        if (!empty($data['atr_wc_notifier_telegram_bot_token']) && !empty($data['atr_wc_notifier_encryption_key'])) {
-            $data['atr_wc_notifier_telegram_bot_token'] = $this->encrypt_telegram_token($data['atr_wc_notifier_telegram_bot_token'], $data['atr_wc_notifier_encryption_key']);
+        // Merge the updated data with current options to ensure all fields are preserved
+        $updated_options = array_merge($current_options, $data);
+
+        return $updated_options;
+    }
+
+
+
+
+
+
+    public function validate_fields1($data)
+    {
+        // Get the encryption key derived from WordPress salts
+        $utils = new Atr_Wc_Order_Notifier_Admin_utils($this->plugin_name, $this->version);
+        $encryption_key = $utils->get_encryption_key();
+
+        // Encrypt the bot token if a new one is provided
+        if (!empty($data['atr_wc_notifier_telegram_bot_token'])) {
+            $data['atr_wc_notifier_telegram_bot_token'] = $this->encrypt_telegram_token($data['atr_wc_notifier_telegram_bot_token'], $encryption_key);
         } else {
             // If the token field is empty, retain the existing encrypted token
             unset($data['atr_wc_notifier_telegram_bot_token']); // Prevent overwriting with an empty value
         }
-
-
         return $data;
-    }
-
-    /**
-     * Check if WooCommerce is activated
-     */
-
-    private function is_woocommerce_activated()
-    {
-        if (class_exists('woocommerce')) {
-            return true;
-        } else {
-            return false;
-        }
     }
 
     private function encrypt_telegram_token($token, $key)
@@ -464,17 +562,16 @@ class Atr_Wc_Order_Notifier_Admin_Settings
         return base64_encode($encrypted_token . '::' . $iv);
     }
 
-    private function decrypt_telegram_token($encrypted_token, $key)
+    /**
+     * Check if WooCommerce is activated
+     */
+    private function is_woocommerce_activated()
     {
-        list($encrypted_data, $iv) = explode('::', base64_decode($encrypted_token), 2);
-        return openssl_decrypt($encrypted_data, 'aes-256-cbc', $key, 0, $iv);
-    }
-
-    public function get_decrypted_telegram_token()
-    {
-        $encrypted_token = $this->options['atr_wc_notifier_telegram_bot_token'];
-        $encryption_key = $this->options['atr_wc_notifier_encryption_key'];
-        return $this->decrypt_telegram_token($encrypted_token, $encryption_key);
+        if (class_exists('woocommerce')) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**

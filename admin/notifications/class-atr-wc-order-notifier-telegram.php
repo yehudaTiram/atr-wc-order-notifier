@@ -73,20 +73,40 @@ class Atr_Wc_Order_Notifier_Admin_Telegram
             $telegram_enabled = isset($options['atr_wc_notifier_telegram_enabled']) ? $options['atr_wc_notifier_telegram_enabled'] : '';
 
             $encrypted_token = isset($options['atr_wc_notifier_telegram_bot_token']) ? $options['atr_wc_notifier_telegram_bot_token'] : '';
-            $encryption_key = isset($options['atr_wc_notifier_encryption_key']) ? $options['atr_wc_notifier_encryption_key'] : '';
 
             $telegram_bot_token = '';
-            if ($encrypted_token && $encryption_key) {
-                $telegram_bot_token = $this->decrypt_telegram_token($encrypted_token, $encryption_key);
+            if ($encrypted_token) {
+                $utils = new Atr_Wc_Order_Notifier_Admin_utils($this->plugin_name, $this->version);
+                $encryption_key = $utils->decrypt_telegram_token($encrypted_token);
+                $telegram_bot_token = $encryption_key;
             }
-
-            // Uencypted way - $telegram_bot_token = isset($options['atr_wc_notifier_telegram_bot_token']) ? $options['atr_wc_notifier_telegram_bot_token'] : '';
             $telegram_chat_id = isset($options['atr_wc_notifier_telegram_chat_id']) ? $options['atr_wc_notifier_telegram_chat_id'] : '';
         }
         // Send to Telegram
         if ($telegram_enabled && $telegram_bot_token && $telegram_chat_id) {
             $text_message = new Atr_Wc_Order_Notifier_Admin_Message($this->plugin_name, $this->plugin_slug);
-            $notification_message = $text_message->notification_messaage($new_status, $order);
+            $notification_message = $text_message->notification_message($new_status, $order);
+
+
+
+
+
+            if (empty($notification_message)) {
+                error_log('Telegram notification failed: Empty message');
+                return;
+            }
+
+            // Clean up HTML entities and tags
+            $clean_message = strip_tags($notification_message);
+            $clean_message = html_entity_decode($clean_message, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+
+            // Replace multiple newlines with single newlines
+            $clean_message = preg_replace('/\n+/', "\n", $clean_message);
+
+            // Replace "nn" with proper newlines
+            $clean_message = str_replace('nn', "\n", $clean_message);
+            $escaped_message = $this->escapeMarkdownV2($clean_message);
+
             // Prepare data for wp_remote_post
             $data = array(
                 'method' => 'POST',
@@ -95,7 +115,9 @@ class Atr_Wc_Order_Notifier_Admin_Telegram
                 ),
                 'body' => json_encode(array(
                     'chat_id' => $telegram_chat_id,
-                    'text' => $notification_message,
+                    'text' => $escaped_message,
+                    'parse_mode' => 'MarkdownV2',
+                    'disable_web_page_preview' => true
                 )),
             );
 
@@ -114,16 +136,20 @@ class Atr_Wc_Order_Notifier_Admin_Telegram
         }
     }
 
-    /**
-     * Decrypts the Telegram bot token using the provided encryption key.
-     *
-     * @param string $encrypted_token The encrypted Telegram bot token.
-     * @param string $key The encryption key.
-     * @return string The decrypted Telegram bot token.
-     */
-    private function decrypt_telegram_token($encrypted_token, $key)
+
+    // Function to escape MarkdownV2 characters while preserving intended formatting
+    private function escapeMarkdownV2($text)
     {
-        list($encrypted_data, $iv) = explode('::', base64_decode($encrypted_token), 2);
-        return openssl_decrypt($encrypted_data, 'aes-256-cbc', $key, 0, $iv);
+        // Escape special characters except those used in our formatting
+        $chars_to_escape = ['[', ']', '(', ')', '~', '`', '>', '#', '+', '-', '=', '|', '{', '}', '.', '!'];
+
+        foreach ($chars_to_escape as $char) {
+            $text = str_replace($char, '\\' . $char, $text);
+        }
+
+        // Convert newlines to Telegram format
+        $text = str_replace("\n", "\n", $text);
+
+        return $text;
     }
 }
