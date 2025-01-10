@@ -1,15 +1,16 @@
-=== Plugin Name ===
-Contributors: Yehuda Tiram - Atarimttr.co.il
-Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=T6VTA75GTS3YA
-Tags: Woocommerce, Order notification
-Requires at least: 3.0.1
-Tested up to: 6.7.1
-Stable tag: 1.0.0
-License: GPLv2 or later
-License URI: http://www.gnu.org/licenses/gpl-2.0.html
-
 # ATR WooCommerce Order Notifier
 A wordpress plugin
+Tags: Woocommerce, Order notification
+
+Requires at least: 3.0.1
+
+Tested up to: 6.7.1
+
+Stable tag: 1.0.0
+
+License: GPLv2 or later
+
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
 ## Key Features
 - **Instant Notifications**: Get immediate alerts for various order statuses, including new orders, processing, completed, on-hold, cancelled, refunded, and failed orders. Stay informed and responsive to customer needs.
 - **Customizable Messages**: Tailor the notification messages to include essential order details such as order ID, customer information, total amount, and payment method. You can also include your website name for easy identification.
@@ -21,7 +22,7 @@ A wordpress plugin
 - **E-commerce Managers**: Keep track of order statuses without constantly checking the WooCommerce dashboard.
 - **Customer Support Teams**: Quickly respond to customer inquiries about order statuses using real-time updates.
 - **Business Owners**: Stay updated on your store’s performance and customer interactions from anywhere via Telegram.
-
+[Donate link](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=T6VTA75GTS3YA)
 # ATR WooCommerce Order Notifier settings
 1. Install the plugin
    1. Download the plugin zip file from [https://github.com/yehudaTiram/atr-wc-order-notifier]
