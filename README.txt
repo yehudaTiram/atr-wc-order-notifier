@@ -1,114 +1,83 @@
 === Plugin Name ===
-Contributors: (this should be a list of wordpress.org userid's)
-Donate link: https://atarimtr.co.il/
-Tags: comments, spam
+Contributors: Yehuda Tiram - Atarimttr.co.il
+Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=T6VTA75GTS3YA
+Tags: Woocommerce, Order notification
 Requires at least: 3.0.1
-Tested up to: 3.4
-Stable tag: 4.3
+Tested up to: 6.7.1
+Stable tag: 1.0.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Here is a short description of the plugin.  This should be no more than 150 characters.  No markup here.
+# ATR WooCommerce Order Notifier
+A wordpress plugin
+## Key Features
+- **Instant Notifications**: Get immediate alerts for various order statuses, including new orders, processing, completed, on-hold, cancelled, refunded, and failed orders. Stay informed and responsive to customer needs.
+- **Customizable Messages**: Tailor the notification messages to include essential order details such as order ID, customer information, total amount, and payment method. You can also include your website name for easy identification.
+- **User-Friendly Setup**: The plugin is easy to install and configure. Simply enter your Telegram bot token and chat ID, and you’re ready to start receiving notifications.
+- **Support for Multiple Statuses**: Receive notifications for all relevant order statuses. Whether you want to track new orders or be alerted when an order is cancelled, this plugin has you covered.
+- **Emoji Support**: Enhance your notifications with emojis that provide a visual cue for different order statuses, making it easier to scan through updates at a glance.
+- **Secure and Reliable**: Built with security in mind, the plugin ensures that sensitive data is handled securely while providing reliable notifications through Telegram’s robust messaging platform.
+## Use Cases
+- **E-commerce Managers**: Keep track of order statuses without constantly checking the WooCommerce dashboard.
+- **Customer Support Teams**: Quickly respond to customer inquiries about order statuses using real-time updates.
+- **Business Owners**: Stay updated on your store’s performance and customer interactions from anywhere via Telegram.
 
-== Description ==
+# ATR WooCommerce Order Notifier settings
+1. Install the plugin
+   1. Download the plugin zip file from [https://github.com/yehudaTiram/atr-wc-order-notifier]
+   2. Go to wordpress Plugins -> Add New Plugin
+   3. At the top of the page you'll see "Add Plugins" "Upload Plugin" click it. Upload the plugin zip file.
+   4. Activate the new plugin
 
-This is the long description.  No limit, and you can use Markdown (as well as in the following sections).
+Move on to create the Telegram Bot you'll use.
+# Creating and Using a Telegram Bot: A Non-Technical Guide
 
-For backwards compatibility, if this section is missing, the full length of the short description will be used, and
-Markdown parsed.
+## Step 1: Set Up Your Bot
 
-A few notes about the sections above:
+1. Open Telegram and search for "BotFather"
+2. Start a chat with BotFather and type <span style="color:#1b75d0"><ins>/newbot</ins></span>
+3. Follow the prompts to name your bot and choose a username
+4. BotFather will provide you with a bot token - save this securely
 
-*   "Contributors" is a comma separated list of wp.org/wp-plugins.org usernames
-*   "Tags" is a comma separated list of tags that apply to the plugin
-*   "Requires at least" is the lowest version that the plugin will work on
-*   "Tested up to" is the highest version that you've *successfully used to test the plugin*. Note that it might work on
-higher versions... this is just the highest one you've verified.
-*   Stable tag should indicate the Subversion "tag" of the latest stable version, or "trunk," if you use `/trunk/` for
-stable.
+## Step 2: Configure Your Bot
 
-    Note that the `readme.txt` of the stable tag is the one that is considered the defining one for the plugin, so
-if the `/trunk/readme.txt` file says that the stable tag is `4.3`, then it is `/tags/4.3/readme.txt` that'll be used
-for displaying information about the plugin.  In this situation, the only thing considered from the trunk `readme.txt`
-is the stable tag pointer.  Thus, if you develop in trunk, you can update the trunk `readme.txt` to reflect changes in
-your in-development version, without having that information incorrectly disclosed about the current stable version
-that lacks those changes -- as long as the trunk's `readme.txt` points to the correct stable tag.
+1. Set a profile picture for your bot (optional)
+2. Add a description of what your bot does
+3. Set up commands your bot can respond to (if applicable)
+   
+#### <span style="color:red">IMPORTANT!</span> You MUST first send a message (anything) to the bot before the bot can send messages to you.
 
-    If no stable tag is provided, it is assumed that trunk is stable, but you should specify "trunk" if that's where
-you put the stable version, in order to eliminate any doubt.
+## Step 3: Get Your Chat ID
 
-== Installation ==
+1. Start a conversation with your new bot
+2. Send a message to your bot
+3. Open a web browser and enter:
+   ```
+   https://api.telegram.org/bot<YourBotToken>/getUpdates
+   ```
+   (Replace <YourBotToken> with your actual bot token)
+4. Look for the "id" field in the "chat" section of the response
+5. This number is your chat ID
 
-This section describes how to install the plugin and get it working.
+## Step 4: Add Bot to the Plugin Settings
+1. Go to the plugin's settings in admin menu WooCommerce -> ATR WC Order Notifier
+### General tab
+1. In <ins>**Bot Token**</ins> enter the bot token you received from BotFather
+2. In <ins>**Chat ID**</ins> enter the chat ID you found in Step 3
+3. Check <ins>**Enable Telegram**</ins> option
+4. In the <ins>**Select statuses**</ins> check Woocommerce statuses you want to be notified on
+5. Save the settings. From now on every order status change you selected will send a message to your Telegram bot in your telegram account.
+### Message details tab
+Check the details you want to see in the notifications
 
-e.g.
 
-1. Upload `atr-wc-order-notifier.php` to the `/wp-content/plugins/` directory
-1. Activate the plugin through the 'Plugins' menu in WordPress
-1. Place `<?php do_action('plugin_name_hook'); ?>` in your templates
+## More info about the encrypting of your Telegram Bot Token
 
-== Frequently Asked Questions ==
+To enhance the security of your Telegram bot token in the plugin settings, we use an encryption process. Here's what you need to know:
+1. **Bot Token Encryption**: Once you enter the bot token and set all your preferences and save the settings, the plugin will automatically encrypt your Telegram bot token.
+2. **Security Benefits**:
+   - The encrypted token is stored instead of the plain text version
+   - Even if someone gains access to your database, they can't use the token
+   - Adds an extra layer of protection for your bot's security
 
-= A question that someone might have =
-
-An answer to that question.
-
-= What about foo bar? =
-
-Answer to foo bar dilemma.
-
-== Screenshots ==
-
-1. This screen shot description corresponds to screenshot-1.(png|jpg|jpeg|gif). Note that the screenshot is taken from
-the /assets directory or the directory that contains the stable readme.txt (tags or trunk). Screenshots in the /assets
-directory take precedence. For example, `/assets/screenshot-1.png` would win over `/tags/4.3/screenshot-1.png`
-(or jpg, jpeg, gif).
-2. This is the second screen shot
-
-== Changelog ==
-
-= 1.0 =
-* A change since the previous version.
-* Another change.
-
-= 0.5 =
-* List versions from most recent at top to oldest at bottom.
-
-== Upgrade Notice ==
-
-= 1.0 =
-Upgrade notices describe the reason a user should upgrade.  No more than 300 characters.
-
-= 0.5 =
-This version fixes a security related bug.  Upgrade immediately.
-
-== Arbitrary section ==
-
-You may provide arbitrary sections, in the same format as the ones above.  This may be of use for extremely complicated
-plugins where more information needs to be conveyed that doesn't fit into the categories of "description" or
-"installation."  Arbitrary sections will be shown below the built-in sections outlined above.
-
-== A brief Markdown Example ==
-
-Ordered list:
-
-1. Some feature
-1. Another feature
-1. Something else about the plugin
-
-Unordered list:
-
-* something
-* something else
-* third thing
-
-Here's a link to [WordPress](http://wordpress.org/ "Your favorite software") and one to [Markdown's Syntax Documentation][markdown syntax].
-Titles are optional, naturally.
-
-[markdown syntax]: http://daringfireball.net/projects/markdown/syntax
-            "Markdown is what the parser uses to process much of the readme file"
-
-Markdown uses email style notation for blockquotes and I've been told:
-> Asterisks for *emphasis*. Double it up  for **strong**.
-
-`<?php code(); // goes in backticks ?>`
+By using this encryption method, you significantly reduce the risk of your Telegram bot token being compromised, even if there's unauthorized access to your plugin settings or database[1].
