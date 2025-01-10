@@ -1,4 +1,7 @@
 # ATR WooCommerce Order Notifier
+## Description
+The WooCommerce Telegram Notification Plugin is a powerful tool designed to enhance your eCommerce operations by seamlessly integrating your WooCommerce store with Telegram. This plugin allows store owners to receive real-time notifications about order status updates directly in their Telegram chat, ensuring that you never miss an important event related to your business.
+
 A wordpress plugin
 
 Tags: Woocommerce, Order notification
