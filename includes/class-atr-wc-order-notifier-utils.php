@@ -1,8 +1,7 @@
 <?php
 
 /**
- *  The admin-facing settings of the plugin.
- *
+ *  Utilities functions shared between all  classes
  * @link       https://atarimtr.co.il
  * @since      1.0.0
  * The utilities of the plugin.

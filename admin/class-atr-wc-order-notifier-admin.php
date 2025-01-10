@@ -55,7 +55,7 @@ class Atr_Wc_Order_Notifier_Admin {
 	 */
 	public function enqueue_styles() {
 
-		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/atr-wc-order-notifier-admin.css', array(), $this->version, 'all' );
+		// wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/atr-wc-order-notifier-admin.css', array(), $this->version, 'all' );
 
 	}
 

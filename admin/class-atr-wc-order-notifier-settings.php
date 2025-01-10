@@ -155,7 +155,7 @@ class Atr_Wc_Order_Notifier_Admin_Settings
                 array(
                     'id'             => 'atr_wc_notifier_telegram_bot_token',
                     'label'            => __('Bot Token', $this->textdomain),
-                    'description'    => __('<div class="security-notice"> <h2 style="font-weight:bold;color:red;">🔐 Important Security Notice before you save the settings</h2> <p>Your bot token will be securely encrypted and stored in our database. Please take note of the following:</p> <ul><li>This is your <strong>only opportunity</strong> to copy the token if you did not do so yet.</li><li>It cannot be retrieved or displayed again through this interface. However, you can retrieve it from Telegram, look at the guide <a target="_blank" href="https://github.com/yehudaTiram/atr-wc-order-notifier">here in my Github</a></li><li>Treat this token as you would any sensitive credential.</li></ul><div class="action-steps"> <h3>Recommended Actions:</h3> <ol><li>Store it in a secure, private location.</li> <li>Consider using a password manager or encrypted note for safekeeping.</li> </ol> </div> <p class="warning"><strong>Note:</strong> If you lose this token, you can retrieve it from Telegram or you\'ll need to generate a new one.</p> </div>', $this->textdomain),
+                    'description'    => __('<div class="security-notice"> <h2 style="font-weight:bold;color:red;">🔐 Important Security Notice before you save the settings</h2> <p>Your bot token will be securely encrypted and stored in the database. Please take note of the following:</p> <ul><li>This is your <strong>only opportunity</strong> to copy the token if you did not do so yet.</li><li>It cannot be retrieved or displayed again through this interface. However, you can retrieve it from Telegram, look at the guide <a target="_blank" href="https://github.com/yehudaTiram/atr-wc-order-notifier">here in my Github</a></li><li>Treat this token as you would any sensitive credential.</li></ul><div class="action-steps"> <h3>Recommended Actions:</h3> <ol><li>Store it in a secure, private location.</li> <li>Consider using a password manager or encrypted note for safekeeping.</li> </ol> </div> <p class="warning"><strong>Note:</strong> If you lose this token, you can retrieve it from Telegram or you\'ll need to generate a new one.</p> </div>', $this->textdomain),
                     'type' => 'text',
                     'default' => '',
                     'placeholder' => 'Bot Token',
@@ -533,27 +533,6 @@ class Atr_Wc_Order_Notifier_Admin_Settings
         return $updated_options;
     }
 
-
-
-
-
-
-    public function validate_fields1($data)
-    {
-        // Get the encryption key derived from WordPress salts
-        $utils = new Atr_Wc_Order_Notifier_Admin_utils($this->plugin_name, $this->version);
-        $encryption_key = $utils->get_encryption_key();
-
-        // Encrypt the bot token if a new one is provided
-        if (!empty($data['atr_wc_notifier_telegram_bot_token'])) {
-            $data['atr_wc_notifier_telegram_bot_token'] = $this->encrypt_telegram_token($data['atr_wc_notifier_telegram_bot_token'], $encryption_key);
-        } else {
-            // If the token field is empty, retain the existing encrypted token
-            unset($data['atr_wc_notifier_telegram_bot_token']); // Prevent overwriting with an empty value
-        }
-        return $data;
-    }
-
     private function encrypt_telegram_token($token, $key)
     {
         $iv_length = openssl_cipher_iv_length('aes-256-cbc');
@@ -669,35 +648,3 @@ class Atr_Wc_Order_Notifier_Admin_Settings
         return $post_types_arr;
     }
 }
-/**
- * Explain the atr_wc_notifier_encryption_key field in your plugin's settings.
- */
-/*
-The atr_wc_notifier_encryption_key field in your plugin's settings is a crucial security feature designed to ensure that the Telegram bot token is stored securely within your WordPress database.
-
-Purpose of the atr_wc_notifier_encryption_key Field:
-Encryption of Sensitive Data:
-
-The atr_wc_notifier_encryption_key field allows the admin to input a custom encryption key. This key is used to encrypt the Telegram bot token before it is saved to the database.
-Encryption ensures that even if someone gains unauthorized access to the database, the bot token remains protected and unreadable without the encryption key.
-Decryption for Plugin Use:
-
-When the plugin needs to use the Telegram bot token (e.g., to send a message via Telegram), the stored encrypted token is decrypted using the atr_wc_notifier_encryption_key.
-This decryption process is done on-the-fly within the plugin, ensuring that the sensitive token is never exposed in plain text outside the plugin’s internal logic.
-Key Features:
-One-Time Setup:
-The encryption key is intended to be set once. After the key is set, it cannot be changed from the plugin settings interface. This prevents potential security risks associated with changing the key.
-Admin Responsibility:
-The admin is responsible for providing a strong, unique encryption key. This key is critical to the security of the stored Telegram bot token.
-Data Security:
-The key must be securely stored and should be known only to the admin. The plugin relies on this key to ensure that encrypted data remains secure and accessible only by the plugin.
-Practical Example:
-Setting Up:
-
-The admin enters the bot token and a strong encryption key in the plugin settings.
-When the settings are saved, the plugin uses the encryption key to encrypt the bot token before storing it in the database.
-During Operation:
-
-When the plugin needs to send a Telegram message, it retrieves the encrypted token from the database, decrypts it using the stored encryption key, and then uses the decrypted token to communicate with the Telegram API.
-By using the atr_wc_notifier_encryption_key, the plugin provides an additional layer of security, ensuring that sensitive information like the Telegram bot token is protected at rest and is only accessible by the plugin with the correct key.
-*/

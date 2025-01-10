@@ -7,13 +7,6 @@
  * public-facing side of the site and the admin area.
  *
  * @link       https://atarimtr.co.il
- * @since      1.0.0
- *
- * @package    Atr_Wc_Order_Notifier
- * @subpackage Atr_Wc_Order_Notifier/includes
- */
-
-/**
  * The core plugin class.
  *
  * This is used to define internationalization, admin-specific hooks, and
@@ -143,12 +136,6 @@ class Atr_Wc_Order_Notifier {
 		 * Telegram notification class
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/notifications/class-atr-wc-order-notifier-telegram.php';
-
-
-		/**
-		 * Kint debug //TODO: remove for production
-		 */
-		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/kint.phar';
 
 		$this->loader = new Atr_Wc_Order_Notifier_Loader();
 

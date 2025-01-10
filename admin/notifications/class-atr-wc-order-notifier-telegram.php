@@ -6,8 +6,8 @@
  * @link       https://atarimtr.co.il
  * @since      1.0.0
  *
- * Defines the plugin name, version, and two examples hooks for how to
- * enqueue the admin-specific stylesheet and JavaScript.
+ * Defines Telegram functionality of the plugin.
+ * Sends notifications to Telegram.
  *
  * @package    Atr_Wc_Order_Notifier
  * @subpackage Atr_Wc_Order_Notifier/admin
@@ -62,11 +62,6 @@ class Atr_Wc_Order_Notifier_Admin_Telegram
 
     private function atr_wc_notifier_send_notification($order, $new_status, $order_id)
     {
-        // Get and Loop Over Order Items
-        $order_items = $order->get_items();
-
-
-
         // Get configured notification settings
         $options = get_option($this->plugin_name);
         if ($options) {
@@ -86,10 +81,6 @@ class Atr_Wc_Order_Notifier_Admin_Telegram
         if ($telegram_enabled && $telegram_bot_token && $telegram_chat_id) {
             $text_message = new Atr_Wc_Order_Notifier_Admin_Message($this->plugin_name, $this->plugin_slug);
             $notification_message = $text_message->notification_message($new_status, $order);
-
-
-
-
 
             if (empty($notification_message)) {
                 error_log('Telegram notification failed: Empty message');
