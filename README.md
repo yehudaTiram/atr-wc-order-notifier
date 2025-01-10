@@ -28,7 +28,9 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 - **E-commerce Managers**: Keep track of order statuses without constantly checking the WooCommerce dashboard.
 - **Customer Support Teams**: Quickly respond to customer inquiries about order statuses using real-time updates.
 - **Business Owners**: Stay updated on your store’s performance and customer interactions from anywhere via Telegram.
+
 [Donate link](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=T6VTA75GTS3YA)
+
 # ATR WooCommerce Order Notifier settings
 1. Install the plugin
    1. Download the plugin zip file from [https://github.com/yehudaTiram/atr-wc-order-notifier]
