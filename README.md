@@ -33,7 +33,7 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 # ATR WooCommerce Order Notifier settings
 1. Install the plugin
-   1. Download the plugin zip file from [https://github.com/yehudaTiram/atr-wc-order-notifier]
+   1. Download the plugin zip file from [[https://github.com/yehudaTiram/atr-wc-order-notifier](https://github.com/yehudaTiram/atr-wc-order-notifier/releases/tag/1.0.0)]
    2. Go to wordpress Plugins -> Add New Plugin
    3. At the top of the page you'll see "Add Plugins" "Upload Plugin" click it. Upload the plugin zip file.
    4. Activate the new plugin
