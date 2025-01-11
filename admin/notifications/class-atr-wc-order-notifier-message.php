@@ -57,23 +57,23 @@ class Atr_Wc_Order_Notifier_Admin_Message
 
         // Check each setting and include it in the message if enabled
         if (isset($options['order_status_in_message']) && $options['order_status_in_message'] === 'on') {
-            $notification_message .= "*Status:* " . ucfirst($new_status) . "\n";
+            $notification_message .= '*' . __('Status', 'atr-wc-order-notifier') . ':*' . ucfirst($new_status) . "\n";
         }
 
         if (isset($options['customer_name_in_message']) && $options['customer_name_in_message'] === 'on') {
-            $notification_message .= "*Customer Name:* " . $order->get_billing_first_name() . " " . $order->get_billing_last_name() . "\n";
+            $notification_message .= '*' . __('Customer Name', 'atr-wc-order-notifier') . ':* ' . $order->get_billing_first_name() . " " . $order->get_billing_last_name() . "\n";
         }
 
         if (isset($options['email_in_message']) && $options['email_in_message'] === 'on') {
-            $notification_message .= "*Email:* " . $order->get_billing_email() . "\n";
+            $notification_message .= '*' . __('Email', 'atr-wc-order-notifier') . ':* ' . $order->get_billing_email() . "\n";
         }
 
         if (isset($options['phone_in_message']) && $options['phone_in_message'] === 'on') {
-            $notification_message .= "*Phone:* " . $order->get_billing_phone() . "\n";
+            $notification_message .= '*' . __('Phone', 'atr-wc-order-notifier') . ':* ' . $order->get_billing_phone() . "\n";
         }
 
         if (isset($options['billing_address_in_message']) && $options['billing_address_in_message'] === 'on') {
-            $notification_message .= "*Billing Address:* " . $this->format_address([
+            $notification_message .= '*' . __('Billing Address', 'atr-wc-order-notifier') . ':* ' . $this->format_address([
                 'Address 1' => $order->get_billing_address_1(),
                 'Address 2' => $order->get_billing_address_2(),
                 'City'      => $order->get_billing_city(),
@@ -84,7 +84,7 @@ class Atr_Wc_Order_Notifier_Admin_Message
         }
 
         if (isset($options['shipping_address_in_message']) && $options['shipping_address_in_message'] === 'on') {
-            $notification_message .= "*Shipping Address:* " . $this->format_address([
+            $notification_message .= '*' . __('Shipping Address', 'atr-wc-order-notifier') . ':* ' . $this->format_address([
                 'Address 1' => $order->get_shipping_address_1(),
                 'Address 2' => $order->get_shipping_address_2(),
                 'City'      => $order->get_shipping_city(),
@@ -95,34 +95,34 @@ class Atr_Wc_Order_Notifier_Admin_Message
         }
 
         if (isset($options['total_amount_in_message']) && $options['total_amount_in_message'] === 'on') {
-            $notification_message .= "*Total Amount:* " . wc_price($order->get_total()) . "\n";
+            $notification_message .= '*' . __('Total Amount', 'atr-wc-order-notifier') . ':* ' . wc_price($order->get_total()) . "\n";
         }
 
         if (isset($options['date_created_in_message']) && $options['date_created_in_message'] === 'on') {
-            $notification_message .= "*Date Created:* " . ($order->get_date_created() ? $order->get_date_created()->date('Y-m-d H:i:s') : '') . "\n";
+            $notification_message .= '*' . __('Date Created', 'atr-wc-order-notifier') . ':* ' . ($order->get_date_created() ? $order->get_date_created()->date('Y-m-d H:i:s') : '') . "\n";
         }
 
         if (isset($options['product_name_in_message']) && $options['product_name_in_message'] === 'on') {
             // Include product details
-            $notification_message .= "\n*Order Items:*\n";
+            $notification_message .= "\n*" . __('Order items', 'atr-wc-order-notifier') . ":*\n";
             foreach ($order->get_items() as $item_id => $item) {
                 $product_name = $item->get_name();
                 $quantity = $item->get_quantity();
                 $total = wc_price($item->get_total());
                 // Add product details to the message
-                $notification_message .= "- {$product_name} x {$quantity} = {$total}\n";
+                $notification_message .= '- ' . $product_name . ' x '. $quantity . ' = ' . $total . "\n";
             }
         }
 
         if (isset($options['payment_method_in_message']) && $options['payment_method_in_message'] === 'on') {
             // Include payment method
-            $notification_message .= "\n*Payment Method:* " . esc_html($order->get_payment_method_title()) . "\n";
+            $notification_message .= "\n*" . __('Payment Method', 'atr-wc-order-notifier') . ':* ' . esc_html($order->get_payment_method_title()) . "\n";
         }
 
         if (isset($options['customer_note_in_message']) && $options['customer_note_in_message'] === 'on') {
             // Include customer note
             if (!empty($order->get_customer_note())) {
-                $notification_message .= "\n*Customer Note:* " . esc_html($order->get_customer_note()) . "\n";
+                $notification_message .= "\n*" . __('Customer Note', 'atr-wc-order-notifier') . ':* ' . esc_html($order->get_customer_note()) . "\n";
             }
         }
 
@@ -136,7 +136,8 @@ class Atr_Wc_Order_Notifier_Admin_Message
                 admin_url('post.php')
             );
             // Add clickable link using HTML syntax
-            $notification_message .= "\nView Order Details: " . esc_url_raw($admin_order_url);
+            $notification_message .= "\n" . __('View Order Details', 'atr-wc-order-notifier') . ': ' . esc_url_raw($admin_order_url);
+            $notification_message .= "\n--------------------------------------\nYehuda Tiram - atarimtr.co.il";
         }
 
 
@@ -157,31 +158,31 @@ class Atr_Wc_Order_Notifier_Admin_Message
 
         switch ($new_status) {
             case 'pending':
-                return $this->get_status_emoji($new_status) . " *New Order #" . $order->get_id() . "* - " . $site_name . "\n\n";
+                return $this->get_status_emoji($new_status) . ' *' . __('New Order', 'atr-wc-order-notifier') . ' #' . $order->get_id() . "* - " . $site_name . "\n\n";
 
             case 'processing':
-                return $this->get_status_emoji($new_status) . " *Order #" . $order->get_id() . " Processing* - " . $site_name . "\n\n";
+                return $this->get_status_emoji($new_status) . ' *' . __('Order', 'atr-wc-order-notifier') . ' #' . $order->get_id() . " Processing* - " . $site_name . "\n\n";
 
             case 'on-hold':
-                return $this->get_status_emoji($new_status) . " *Order #" . $order->get_id() . " On Hold* - " . $site_name . "\n\n";
+                return $this->get_status_emoji($new_status) . ' *' . __('Order', 'atr-wc-order-notifier') . ' #' . $order->get_id() . ' ' . _('On Hold', 'atr-wc-order-notifier') . '* - ' . $site_name . "\n\n";
 
             case 'completed':
-                return $this->get_status_emoji($new_status) . " *Order #" . $order->get_id() . " Completed* - " . $site_name . "\n\n";
+                return $this->get_status_emoji($new_status) . ' *' . __('Order', 'atr-wc-order-notifier') . ' #' . $order->get_id() . ' ' . _('Completed', 'atr-wc-order-notifier') . '* - ' . $site_name . "\n\n";
 
             case 'cancelled':
-                return $this->get_status_emoji($new_status) . " *Order #" . $order->get_id() . " Cancelled* - " . $site_name . "\n\n";
+                return $this->get_status_emoji($new_status) . ' *' . __('Order', 'atr-wc-order-notifier') . ' #' . $order->get_id() . ' ' . _('Cancelled', 'atr-wc-order-notifier') . '* - ' . $site_name . "\n\n";
 
             case 'refunded':
-                return $this->get_status_emoji($new_status) . " *Order #" . $order->get_id() . " Refunded* - " . $site_name . "\n\n";
+                return $this->get_status_emoji($new_status) . ' *' . __('Order', 'atr-wc-order-notifier') . ' #' . $order->get_id() . ' ' . _('Refunded', 'atr-wc-order-notifier') . '* - ' . $site_name . "\n\n";
 
             case 'failed':
-                return $this->get_status_emoji($new_status) . " *Order #" . $order->get_id() . " Failed* - " . $site_name . "\n\n";
+                return $this->get_status_emoji($new_status) . ' *' . __('Order', 'atr-wc-order-notifier') . ' #' . $order->get_id() . ' ' . _('Failed', 'atr-wc-order-notifier') . '* - ' . $site_name . "\n\n";
 
             case 'checkout-draft':
-                return $this->get_status_emoji($new_status) . " *Draft Order #" . $order->get_id() . "* - " . $site_name . "\n\n";
+                return $this->get_status_emoji($new_status) . ' *' . __('Draft order', 'atr-wc-order-notifier') . ' #' . $order->get_id() . '* - ' . $site_name . "\n\n";
 
             default:
-                return $this->get_status_emoji($new_status) . " *Order #" . $order->get_id() . " Status Updated* - " . $site_name . "\n\n";
+                return $this->get_status_emoji($new_status) . ' *' . __('Order', 'atr-wc-order-notifier') . ' #' . $order->get_id() . ' ' . _('Status Updated', 'atr-wc-order-notifier') . '* - ' . $site_name . "\n\n";
         }
     }
 

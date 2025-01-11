@@ -1,15 +1,14 @@
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: ATR WooCommerce Order Notifier\n"
 "POT-Creation-Date: 2025-01-11 20:21+0200\n"
-"PO-Revision-Date: 2025-01-11 19:28+0200\n"
+"PO-Revision-Date: 2025-01-11 20:40+0200\n"
 "Last-Translator: Yehuda Tiram <yehuda@atarimtr.co.il>\n"
 "Language-Team: Yehuda Tiram <yehuda@atarimtr.co.il>\n"
+"Language: he_IL\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "X-Generator: Poedit 3.5\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-Flags-xgettext: --add-comments=translators:\n"
@@ -25,19 +24,19 @@ msgstr ""
 
 #: admin/class-atr-wc-order-notifier-settings.php:137
 msgid "Settings"
-msgstr ""
+msgstr "הגדרות"
 
 #: admin/class-atr-wc-order-notifier-settings.php:152
 msgid "General"
-msgstr ""
+msgstr "כללי"
 
 #: admin/class-atr-wc-order-notifier-settings.php:153
 msgid "General settings"
-msgstr ""
+msgstr "הגדרות כלליות"
 
 #: admin/class-atr-wc-order-notifier-settings.php:157
 msgid "Bot Token"
-msgstr ""
+msgstr "טוקן של הבוט (Bot Token)"
 
 #: admin/class-atr-wc-order-notifier-settings.php:158
 msgid ""
@@ -56,59 +55,71 @@ msgid ""
 "class=\"warning\"><strong>Note:</strong> If you lose this token, you can "
 "retrieve it from Telegram or you'll need to generate a new one.</p> </div>"
 msgstr ""
+"<div class=\"security-notice\"> <h2 style=\"font-weight:bold;color:red;\">🔐 "
+"הודעת אבטחה חשובה לפני שמירת ההגדרות</h2> <p>הטוקן של הבוט שלך יוצפן ויאוחסן "
+"בצורה מאובטחת במסד הנתונים. אנא שימו לב לנקודות הבאות:</p> <ul> <li>זוהי "
+"<strong>ההזדמנות היחידה שלך</strong> להעתיק את הטוקן אם טרם עשית זאת.</li> "
+"<li>לא ניתן לאחזר או להציג אותו שוב דרך ממשק זה. עם זאת, תוכל לאחזר אותו "
+"מטלגרם, ראה את המדריך <a target=\"_blank\" href=\"https://github.com/"
+"yehudaTiram/atr-wc-order-notifier\">כאן בגיטהאב שלי</a></li> <li>התייחס "
+"לטוקן זה כפי שהיית מתייחס לכל פרט אימות רגיש.</li> </ul> <div class=\"action-"
+"steps\"> <h3>פעולות מומלצות:</h3> <ol> <li>אחסן אותו במיקום מאובטח ופרטי.</"
+"li> <li>שקול להשתמש במנהל סיסמאות או בהערה מוצפנת לשמירה בטוחה.</li> </ol> </"
+"div> <p class=\"warning\"><strong>שים לב:</strong> אם תאבד טוקן זה, תוכל "
+"לאחזר אותו מטלגרם או שתצטרך ליצור חדש.</p> </div>"
 
 #: admin/class-atr-wc-order-notifier-settings.php:165
 msgid "Chat ID"
-msgstr ""
+msgstr "זיהוי הצ'אט (Chat ID)"
 
 #: admin/class-atr-wc-order-notifier-settings.php:166
 msgid "telegram Chat ID"
-msgstr ""
+msgstr "זיהוי הצ'אט (Chat ID) בטלגראם"
 
 #: admin/class-atr-wc-order-notifier-settings.php:173
 #: admin/class-atr-wc-order-notifier-settings.php:174
 msgid "Enable Telegram"
-msgstr ""
+msgstr "אפשר הודעות לטלגראם"
 
 #: admin/class-atr-wc-order-notifier-settings.php:180
 msgid "Select statuses"
-msgstr ""
+msgstr "בחרו סטאטוסים"
 
 #: admin/class-atr-wc-order-notifier-settings.php:181
 msgid "Select statuses to notify about."
-msgstr ""
+msgstr "בחרו סטאטוסים להפעלת הודעות"
 
 #: admin/class-atr-wc-order-notifier-settings.php:184
 msgid "Pending payment"
-msgstr ""
+msgstr "ממתין לתשלום"
 
 #: admin/class-atr-wc-order-notifier-settings.php:185
 msgid "On hold"
-msgstr ""
+msgstr "בהמתנה"
 
 #: admin/class-atr-wc-order-notifier-settings.php:186
 msgid "Processing"
-msgstr ""
+msgstr "מעבד"
 
 #: admin/class-atr-wc-order-notifier-settings.php:187
 #: admin/notifications/class-atr-wc-order-notifier-message.php:173
 msgid "Cancelled"
-msgstr ""
+msgstr "בוטל"
 
 #: admin/class-atr-wc-order-notifier-settings.php:188
 #: admin/notifications/class-atr-wc-order-notifier-message.php:170
 msgid "Completed"
-msgstr ""
+msgstr "הושלם"
 
 #: admin/class-atr-wc-order-notifier-settings.php:189
 #: admin/notifications/class-atr-wc-order-notifier-message.php:179
 msgid "Failed"
-msgstr ""
+msgstr "נכשל"
 
 #: admin/class-atr-wc-order-notifier-settings.php:190
 #: admin/notifications/class-atr-wc-order-notifier-message.php:176
 msgid "Refunded"
-msgstr ""
+msgstr "זוכה"
 
 #: admin/class-atr-wc-order-notifier-settings.php:191
 msgid "Checkout draft"
@@ -116,146 +127,147 @@ msgstr ""
 
 #: admin/class-atr-wc-order-notifier-settings.php:198
 msgid "Message details"
-msgstr ""
+msgstr "פרטי ההודעה"
 
 #: admin/class-atr-wc-order-notifier-settings.php:199
 msgid "The message details"
-msgstr ""
+msgstr "הפרטים של ההזמנה שיופיעו בהודעה"
 
 #: admin/class-atr-wc-order-notifier-settings.php:203
 msgid "Order ID"
-msgstr ""
+msgstr "מספר הזמנה:"
 
 #: admin/class-atr-wc-order-notifier-settings.php:204
 msgid "Include Order ID in the message"
-msgstr ""
+msgstr "שלח את מס. זיהוי ההזמנה"
 
 #: admin/class-atr-wc-order-notifier-settings.php:210
 #: admin/notifications/class-atr-wc-order-notifier-message.php:64
 msgid "Customer Name"
-msgstr ""
+msgstr "שם הלקוח"
 
 #: admin/class-atr-wc-order-notifier-settings.php:211
 msgid "Include Customer Name in the message"
-msgstr ""
+msgstr "שלח את שם הלקוח"
 
 #: admin/class-atr-wc-order-notifier-settings.php:217
 #: admin/notifications/class-atr-wc-order-notifier-message.php:68
 msgid "Email"
-msgstr ""
+msgstr "דוא\"ל"
 
 #: admin/class-atr-wc-order-notifier-settings.php:218
 msgid "Include Customer Email in the message"
-msgstr ""
+msgstr "שלח את אימייל הלקוח"
 
 #: admin/class-atr-wc-order-notifier-settings.php:224
 #: admin/notifications/class-atr-wc-order-notifier-message.php:72
 msgid "Phone"
-msgstr ""
+msgstr "טלפון"
 
 #: admin/class-atr-wc-order-notifier-settings.php:225
 msgid "Include Customer Phone in the message"
-msgstr ""
+msgstr "שלח את מס. הטלפון של הלקוח"
 
 #: admin/class-atr-wc-order-notifier-settings.php:231
 #: admin/notifications/class-atr-wc-order-notifier-message.php:76
 msgid "Billing Address"
-msgstr ""
+msgstr "כתובת חיוב"
 
 #: admin/class-atr-wc-order-notifier-settings.php:232
 msgid "Include Billing Address in the message"
-msgstr ""
+msgstr "שלח את כתובת החיוב של הלקוח"
 
 #: admin/class-atr-wc-order-notifier-settings.php:238
 #: admin/notifications/class-atr-wc-order-notifier-message.php:87
 msgid "Shipping Address"
-msgstr ""
+msgstr "כתובת משלוח"
 
 #: admin/class-atr-wc-order-notifier-settings.php:239
 msgid "Include Shipping Address in the message"
-msgstr ""
+msgstr "שלח את הכתובת למשלוח"
 
 #: admin/class-atr-wc-order-notifier-settings.php:245
 #: admin/notifications/class-atr-wc-order-notifier-message.php:98
 msgid "Total Amount"
-msgstr ""
+msgstr "סה\"כ"
 
 #: admin/class-atr-wc-order-notifier-settings.php:246
 msgid "Include Total Order Amount in the message"
-msgstr ""
+msgstr "שלח את סה\"כ התשלום"
 
 #: admin/class-atr-wc-order-notifier-settings.php:252
 msgid "Order Status"
-msgstr ""
+msgstr "סטטוס ההזמנה"
 
 #: admin/class-atr-wc-order-notifier-settings.php:253
 msgid "Include Order Status in the message"
-msgstr ""
+msgstr "שלח את סטאטוס ההזמנה"
 
 #: admin/class-atr-wc-order-notifier-settings.php:259
 #: admin/notifications/class-atr-wc-order-notifier-message.php:102
 msgid "Date Created"
-msgstr ""
+msgstr "תאריך יצירה"
 
 #: admin/class-atr-wc-order-notifier-settings.php:260
 msgid "Include Order Creation Date in the message"
-msgstr ""
+msgstr "שלח את תאריך יצירת ההזמנה"
 
 #: admin/class-atr-wc-order-notifier-settings.php:266
 msgid "Date Modified"
-msgstr ""
+msgstr "תאריך שינוי"
 
 #: admin/class-atr-wc-order-notifier-settings.php:267
 msgid "Include Order Modification Date in the message"
-msgstr ""
+msgstr "שלח את תאריך שינוי ההזמנה"
 
 #: admin/class-atr-wc-order-notifier-settings.php:273
 msgid "Product Name"
-msgstr ""
+msgstr "שם המוצר"
 
 #: admin/class-atr-wc-order-notifier-settings.php:274
 msgid "Include Product Name(s) in the message"
-msgstr ""
+msgstr "שלח את פירוט המוצרים שבהזמנה"
 
 #: admin/class-atr-wc-order-notifier-settings.php:280
 msgid "Product Quantity"
-msgstr ""
+msgstr "כמות"
 
 #: admin/class-atr-wc-order-notifier-settings.php:281
 msgid "Include Product Quantity in the message"
-msgstr ""
+msgstr "שלח את כמות המוצרים בהזמנה"
 
 #: admin/class-atr-wc-order-notifier-settings.php:287
 #: admin/notifications/class-atr-wc-order-notifier-message.php:119
 msgid "Payment Method"
-msgstr ""
+msgstr "אמצעי תשלום"
 
 #: admin/class-atr-wc-order-notifier-settings.php:288
 msgid "Include Payment Method in the message"
-msgstr ""
+msgstr "שלח את שיטת התשלום"
 
 #: admin/class-atr-wc-order-notifier-settings.php:294
 #: admin/notifications/class-atr-wc-order-notifier-message.php:125
 msgid "Customer Note"
-msgstr ""
+msgstr "הערת לקוח"
 
 #: admin/class-atr-wc-order-notifier-settings.php:295
 msgid "Include Customer Note in the message"
-msgstr ""
+msgstr "שלח את הערת הלקוח"
 
 #: admin/class-atr-wc-order-notifier-settings.php:301
 msgid "Order Link"
-msgstr ""
+msgstr "קישור להזמנה"
 
 #: admin/class-atr-wc-order-notifier-settings.php:302
 msgid "Include a clickable link to the order details in the message"
-msgstr ""
+msgstr "שלח קישור להזמנה"
 
 #: admin/class-atr-wc-order-notifier-settings.php:400
 msgid ""
 "Enter your Telegram Bot Token. If left empty, the current token will be "
 "retained."
 msgstr ""
+"הדביקו את הטוקן של הבוט בטלגראם. אם תשאירו ריק, הטוקן הקיים יישמר ללא שינוי."
 
 #: admin/class-atr-wc-order-notifier-settings.php:566
 msgid "ATR WooCommerce Order Notifier Settings"
@@ -263,23 +275,23 @@ msgstr ""
 
 #: admin/class-atr-wc-order-notifier-settings.php:567
 msgid "Settings."
-msgstr ""
+msgstr "הגדרות."
 
 #: admin/notifications/class-atr-wc-order-notifier-message.php:60
 msgid "Status"
-msgstr ""
+msgstr "סטטוס"
 
 #: admin/notifications/class-atr-wc-order-notifier-message.php:107
 msgid "Order items"
-msgstr ""
+msgstr "פריטים בהזמנה"
 
 #: admin/notifications/class-atr-wc-order-notifier-message.php:139
 msgid "View Order Details"
-msgstr ""
+msgstr "צפו בהזמנה באתר"
 
 #: admin/notifications/class-atr-wc-order-notifier-message.php:161
 msgid "New Order"
-msgstr ""
+msgstr "הזמנה חדשה"
 
 #: admin/notifications/class-atr-wc-order-notifier-message.php:164
 #: admin/notifications/class-atr-wc-order-notifier-message.php:167
@@ -289,11 +301,11 @@ msgstr ""
 #: admin/notifications/class-atr-wc-order-notifier-message.php:179
 #: admin/notifications/class-atr-wc-order-notifier-message.php:185
 msgid "Order"
-msgstr ""
+msgstr "הזמנה"
 
 #: admin/notifications/class-atr-wc-order-notifier-message.php:167
 msgid "On Hold"
-msgstr ""
+msgstr "בהשהייה"
 
 #: admin/notifications/class-atr-wc-order-notifier-message.php:182
 msgid "Draft order"
@@ -301,7 +313,7 @@ msgstr ""
 
 #: admin/notifications/class-atr-wc-order-notifier-message.php:185
 msgid "Status Updated"
-msgstr ""
+msgstr "הסטטוס עודכן"
 
 #. Plugin Name of the plugin/theme
 msgid "ATR WooCommerce Order Notifier"
@@ -309,18 +321,20 @@ msgstr ""
 
 #. Plugin URI of the plugin/theme
 msgid "https://atarimtr.co.il"
-msgstr ""
+msgstr "https://atarimtr.co.il"
 
 #. Description of the plugin/theme
 msgid ""
 "Sends notifications for WooCommerce order events to Telegram, Slack, (and "
 "other platforms)."
 msgstr ""
+"שולח התראות על הזמנות חדשות או שינוי מצב הזמנה ב-ווקומרס לטלגרם, (בעתיד גם) "
+"סלאק, (ופלטפורמות אחרות)."
 
 #. Author of the plugin/theme
 msgid "Yehuda Tiram"
-msgstr ""
+msgstr "יהודה תירם"
 
 #. Author URI of the plugin/theme
 msgid "https://atarimtr.co.il/"
-msgstr ""
+msgstr "https://atarimtr.co.il/"
