@@ -1,4 +1,4 @@
-=== ATR Shop Order Notifier for Woocommerce ===
+=== ATR WooCommerce Order Notifier ===
 Contributors: yehudaT
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=T6VTA75GTS3YA
 Tags: woocommerce, order notification, telegram
@@ -13,7 +13,7 @@ Seamlessly integrating your WooCommerce store with Telegram for real-time order 
 
 == Description ==
 
-ATR Shop Order Notifier for woocommerce is a plugin that allows store owners to receive real-time notifications about order status updates directly in their Telegram chat, ensuring that you never miss an important event related to your business.
+ATR WooCommerce Order Notifier is a plugin that allows store owners to receive real-time notifications about order status updates directly in their Telegram chat, ensuring that you never miss an important event related to your business.
 
 Key Features:
 
