@@ -164,25 +164,25 @@ class Atr_Wc_Order_Notifier_Admin_Message
                 return $this->get_status_emoji($new_status) . ' *' . __('Order', 'atr-wc-order-notifier') . ' #' . $order->get_id() . " Processing* - " . $site_name . "\n\n";
 
             case 'on-hold':
-                return $this->get_status_emoji($new_status) . ' *' . __('Order', 'atr-wc-order-notifier') . ' #' . $order->get_id() . ' ' . _('On Hold', 'atr-wc-order-notifier') . '* - ' . $site_name . "\n\n";
+                return $this->get_status_emoji($new_status) . ' *' . __('Order', 'atr-wc-order-notifier') . ' #' . $order->get_id() . ' ' . __('On Hold', 'atr-wc-order-notifier') . '* - ' . $site_name . "\n\n";
 
             case 'completed':
-                return $this->get_status_emoji($new_status) . ' *' . __('Order', 'atr-wc-order-notifier') . ' #' . $order->get_id() . ' ' . _('Completed', 'atr-wc-order-notifier') . '* - ' . $site_name . "\n\n";
+                return $this->get_status_emoji($new_status) . ' *' . __('Order', 'atr-wc-order-notifier') . ' #' . $order->get_id() . ' ' . __('Completed', 'atr-wc-order-notifier') . '* - ' . $site_name . "\n\n";
 
             case 'cancelled':
-                return $this->get_status_emoji($new_status) . ' *' . __('Order', 'atr-wc-order-notifier') . ' #' . $order->get_id() . ' ' . _('Cancelled', 'atr-wc-order-notifier') . '* - ' . $site_name . "\n\n";
+                return $this->get_status_emoji($new_status) . ' *' . __('Order', 'atr-wc-order-notifier') . ' #' . $order->get_id() . ' ' . __('Cancelled', 'atr-wc-order-notifier') . '* - ' . $site_name . "\n\n";
 
             case 'refunded':
-                return $this->get_status_emoji($new_status) . ' *' . __('Order', 'atr-wc-order-notifier') . ' #' . $order->get_id() . ' ' . _('Refunded', 'atr-wc-order-notifier') . '* - ' . $site_name . "\n\n";
+                return $this->get_status_emoji($new_status) . ' *' . __('Order', 'atr-wc-order-notifier') . ' #' . $order->get_id() . ' ' . __('Refunded', 'atr-wc-order-notifier') . '* - ' . $site_name . "\n\n";
 
             case 'failed':
-                return $this->get_status_emoji($new_status) . ' *' . __('Order', 'atr-wc-order-notifier') . ' #' . $order->get_id() . ' ' . _('Failed', 'atr-wc-order-notifier') . '* - ' . $site_name . "\n\n";
+                return $this->get_status_emoji($new_status) . ' *' . __('Order', 'atr-wc-order-notifier') . ' #' . $order->get_id() . ' ' . __('Failed', 'atr-wc-order-notifier') . '* - ' . $site_name . "\n\n";
 
             case 'checkout-draft':
                 return $this->get_status_emoji($new_status) . ' *' . __('Draft order', 'atr-wc-order-notifier') . ' #' . $order->get_id() . '* - ' . $site_name . "\n\n";
 
             default:
-                return $this->get_status_emoji($new_status) . ' *' . __('Order', 'atr-wc-order-notifier') . ' #' . $order->get_id() . ' ' . _('Status Updated', 'atr-wc-order-notifier') . '* - ' . $site_name . "\n\n";
+                return $this->get_status_emoji($new_status) . ' *' . __('Order', 'atr-wc-order-notifier') . ' #' . $order->get_id() . ' ' . __('Status Updated', 'atr-wc-order-notifier') . '* - ' . $site_name . "\n\n";
         }
     }
 

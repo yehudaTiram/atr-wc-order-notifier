@@ -34,20 +34,11 @@ class Atr_Wc_Order_Notifier_Admin_Settings
     private $version;
 
     /**
-     * The text domain of this plugin.
-     *
-     * @since    1.0.0
-     * @access   private
-     * @var      string    $textdomain    The current version of this plugin.
-     */
-    private $textdomain;
-
-    /**
      * The slug of this plugin.
      *
      * @since    1.0.0
      * @access   private
-     * @var      string    $textdomain    The current version of this plugin.
+     * @var      string    $plugin_slug    The current version of this plugin.
      */
     private $plugin_slug;
 
@@ -89,7 +80,6 @@ class Atr_Wc_Order_Notifier_Admin_Settings
         $this->file = $file;
         $this->plugin_slug = $plugin_slug;
         $this->plugin_name = $plugin_name;
-        $this->textdomain = str_replace('_', '-', $plugin_slug);
 
         // Initialise settings
         add_action('admin_init', array($this, 'init'));
@@ -134,7 +124,7 @@ class Atr_Wc_Order_Notifier_Admin_Settings
      */
     public function add_action_links($links)
     {
-        $links[] = '<a href="' . esc_url(get_admin_url(null, 'admin.php?page=' . $this->plugin_name)) . '">' . __('Settings', $this->textdomain) . '</a>';
+        $links[] = '<a href="' . esc_url(get_admin_url(null, 'admin.php?page=' . $this->plugin_name)) . '">' . __('Settings', 'atr-wc-order-notifier') . '</a>';
         $links[] = '<a href="http://atarimtr.com" target="_blank">More plugins by Yehuda Tiram (English)</a>';
         $links[] = '<a href="http://atarimtr.co.il" target="_blank">More plugins by Yehuda Tiram (Hebrew)</a>';
         return $links;
@@ -148,158 +138,177 @@ class Atr_Wc_Order_Notifier_Admin_Settings
      */
     private function settings_fields()
     {
+        $security_notice = '<div class="security-notice">';
+        $security_notice .= '<h2 style="font-weight:bold;color:red;">' . esc_html__('🔐 Important Security Notice before you save the settings', 'atr-wc-order-notifier') . '</h2>';
+        $security_notice .= '<p>' . esc_html__('Your bot token will be securely encrypted and stored in the database. Please take note of the following:', 'atr-wc-order-notifier') . '</p>';
+        $security_notice .= '<ul>';
+        /* translators: %1$s and %2$s: HTML tags for strong emphasis */
+        $security_notice .= '<li>' . sprintf(__('This is your %1$sonly opportunity%2$s to copy the token if you did not do so yet.', 'atr-wc-order-notifier'), '<strong>', '</strong>') . '</li>';
+        $security_notice .= '<li>' . esc_html__('It cannot be retrieved or displayed again through this interface. However, you can retrieve it from Telegram, look at the guide', 'atr-wc-order-notifier') . ' <a target="_blank" href="https://github.com/yehudaTiram/atr-wc-order-notifier">' . esc_html__('here in my Github', 'atr-wc-order-notifier') . '</a></li>';
+        $security_notice .= '<li>' . esc_html__('Treat this token as you would any sensitive credential.', 'atr-wc-order-notifier') . '</li>';
+        $security_notice .= '</ul>';
+        $security_notice .= '<div class="action-steps">';
+        $security_notice .= '<h3>' . esc_html__('Recommended Actions:', 'atr-wc-order-notifier') . '</h3>';
+        $security_notice .= '<ol>';
+        $security_notice .= '<li>' . esc_html__('Store it in a secure, private location.', 'atr-wc-order-notifier') . '</li>';
+        $security_notice .= '<li>' . esc_html__('Consider using a password manager or encrypted note for safekeeping.', 'atr-wc-order-notifier') . '</li>';
+        $security_notice .= '</ol>';
+        $security_notice .= '</div>';
+        $security_notice .= '<p class="warning"><strong>' . esc_html__('Note:', 'atr-wc-order-notifier') . '</strong> ' . esc_html__('If you lose this token, you can retrieve it from Telegram or you\'ll need to generate a new one.', 'atr-wc-order-notifier') . '</p>';
+        $security_notice .= '</div>';
+
         $settings['easy'] = array(
-            'title'                    => __('General', $this->textdomain),
-            'description'            => __('General settings', $this->textdomain),
+            'title'                    => __('General', 'atr-wc-order-notifier'),
+            'description'            => __('General settings', 'atr-wc-order-notifier'),
             'fields'                => array(
                 array(
                     'id'             => 'atr_wc_notifier_telegram_bot_token',
-                    'label'            => __('Bot Token', $this->textdomain),
-                    'description'    => __('<div class="security-notice"> <h2 style="font-weight:bold;color:red;">🔐 Important Security Notice before you save the settings</h2> <p>Your bot token will be securely encrypted and stored in the database. Please take note of the following:</p> <ul><li>This is your <strong>only opportunity</strong> to copy the token if you did not do so yet.</li><li>It cannot be retrieved or displayed again through this interface. However, you can retrieve it from Telegram, look at the guide <a target="_blank" href="https://github.com/yehudaTiram/atr-wc-order-notifier">here in my Github</a></li><li>Treat this token as you would any sensitive credential.</li></ul><div class="action-steps"> <h3>Recommended Actions:</h3> <ol><li>Store it in a secure, private location.</li> <li>Consider using a password manager or encrypted note for safekeeping.</li> </ol> </div> <p class="warning"><strong>Note:</strong> If you lose this token, you can retrieve it from Telegram or you\'ll need to generate a new one.</p> </div>', $this->textdomain),
+                    'label'            => __('Bot Token', 'atr-wc-order-notifier'),
+                    'description'    => $security_notice,
                     'type' => 'text',
                     'default' => '',
                     'placeholder' => 'Bot Token',
                 ),
                 array(
                     'id'             => 'atr_wc_notifier_telegram_chat_id',
-                    'label'            => __('Chat ID', $this->textdomain),
-                    'description'    => __('telegram Chat ID', $this->textdomain),
+                    'label'            => __('Chat ID', 'atr-wc-order-notifier'),
+                    'description'    => __('telegram Chat ID', 'atr-wc-order-notifier'),
                     'type' => 'text',
                     'default' => '',
                     'placeholder' => 'Chat ID',
                 ),
                 array(
                     'id'             => 'atr_wc_notifier_telegram_enabled',
-                    'label'            => __('Enable Telegram', $this->textdomain),
-                    'description'    => __('Enable Telegram', $this->textdomain),
+                    'label'            => __('Enable Telegram', 'atr-wc-order-notifier'),
+                    'description'    => __('Enable Telegram', 'atr-wc-order-notifier'),
                     'type' => 'checkbox',
                     'default' => 'off',
                 ),
                 array(
                     'id' => 'atr_wc_notifier_statuses',
-                    'label' => __('Select statuses', $this->textdomain),
-                    'description' => __('Select statuses to notify about.', $this->textdomain),
+                    'label' => __('Select statuses', 'atr-wc-order-notifier'),
+                    'description' => __('Select statuses to notify about.', 'atr-wc-order-notifier'),
                     'type' => 'checkbox_multi',
                     'options' => array(
-                        'pending' => __('Pending payment', $this->textdomain),
-                        'on-hold' => __('On hold', $this->textdomain),
-                        'processing' => __('Processing', $this->textdomain),
-                        'cancelled' => __('Cancelled', $this->textdomain),
-                        'completed' => __('Completed', $this->textdomain),
-                        'failed' => __('Failed', $this->textdomain),
-                        'refunded' => __('Refunded', $this->textdomain),
-                        'checkout-draft' => __('Checkout draft', $this->textdomain),
+                        'pending' => __('Pending payment', 'atr-wc-order-notifier'),
+                        'on-hold' => __('On hold', 'atr-wc-order-notifier'),
+                        'processing' => __('Processing', 'atr-wc-order-notifier'),
+                        'cancelled' => __('Cancelled', 'atr-wc-order-notifier'),
+                        'completed' => __('Completed', 'atr-wc-order-notifier'),
+                        'failed' => __('Failed', 'atr-wc-order-notifier'),
+                        'refunded' => __('Refunded', 'atr-wc-order-notifier'),
+                        'checkout-draft' => __('Checkout draft', 'atr-wc-order-notifier'),
                     ),
                     'default' => '',
                 ),
             )
         );
         $settings['sec_tab'] = array(
-            'title'                    => __('Message details', $this->textdomain),
-            'description'            => __('The message details', $this->textdomain),
+            'title'                    => __('Message details', 'atr-wc-order-notifier'),
+            'description'            => __('The message details', 'atr-wc-order-notifier'),
             'fields' => array(
                 array(
                     'id'          => 'order_id_in_message',
-                    'label'       => __('Order ID', $this->textdomain),
-                    'description' => __('Include Order ID in the message', $this->textdomain),
+                    'label'       => __('Order ID', 'atr-wc-order-notifier'),
+                    'description' => __('Include Order ID in the message', 'atr-wc-order-notifier'),
                     'type'        => 'checkbox',
                     'default'     => 'off',
                 ),
                 array(
                     'id'          => 'customer_name_in_message',
-                    'label'       => __('Customer Name', $this->textdomain),
-                    'description' => __('Include Customer Name in the message', $this->textdomain),
+                    'label'       => __('Customer Name', 'atr-wc-order-notifier'),
+                    'description' => __('Include Customer Name in the message', 'atr-wc-order-notifier'),
                     'type'        => 'checkbox',
                     'default'     => 'off',
                 ),
                 array(
                     'id'          => 'email_in_message',
-                    'label'       => __('Email', $this->textdomain),
-                    'description' => __('Include Customer Email in the message', $this->textdomain),
+                    'label'       => __('Email', 'atr-wc-order-notifier'),
+                    'description' => __('Include Customer Email in the message', 'atr-wc-order-notifier'),
                     'type'        => 'checkbox',
                     'default'     => 'off',
                 ),
                 array(
                     'id'          => 'phone_in_message',
-                    'label'       => __('Phone', $this->textdomain),
-                    'description' => __('Include Customer Phone in the message', $this->textdomain),
+                    'label'       => __('Phone', 'atr-wc-order-notifier'),
+                    'description' => __('Include Customer Phone in the message', 'atr-wc-order-notifier'),
                     'type'        => 'checkbox',
                     'default'     => 'off',
                 ),
                 array(
                     'id'          => 'billing_address_in_message',
-                    'label'       => __('Billing Address', $this->textdomain),
-                    'description' => __('Include Billing Address in the message', $this->textdomain),
+                    'label'       => __('Billing Address', 'atr-wc-order-notifier'),
+                    'description' => __('Include Billing Address in the message', 'atr-wc-order-notifier'),
                     'type'        => 'checkbox',
                     'default'     => 'off',
                 ),
                 array(
                     'id'          => 'shipping_address_in_message',
-                    'label'       => __('Shipping Address', $this->textdomain),
-                    'description' => __('Include Shipping Address in the message', $this->textdomain),
+                    'label'       => __('Shipping Address', 'atr-wc-order-notifier'),
+                    'description' => __('Include Shipping Address in the message', 'atr-wc-order-notifier'),
                     'type'        => 'checkbox',
                     'default'     => 'off',
                 ),
                 array(
                     'id'          => 'total_amount_in_message',
-                    'label'       => __('Total Amount', $this->textdomain),
-                    'description' => __('Include Total Order Amount in the message', $this->textdomain),
+                    'label'       => __('Total Amount', 'atr-wc-order-notifier'),
+                    'description' => __('Include Total Order Amount in the message', 'atr-wc-order-notifier'),
                     'type'        => 'checkbox',
                     'default'     => 'off',
                 ),
                 array(
                     'id'          => 'order_status_in_message',
-                    'label'       => __('Order Status', $this->textdomain),
-                    'description' => __('Include Order Status in the message', $this->textdomain),
+                    'label'       => __('Order Status', 'atr-wc-order-notifier'),
+                    'description' => __('Include Order Status in the message', 'atr-wc-order-notifier'),
                     'type'        => 'checkbox',
                     'default'     => 'off',
                 ),
                 array(
                     'id'          => 'date_created_in_message',
-                    'label'       => __('Date Created', $this->textdomain),
-                    'description' => __('Include Order Creation Date in the message', $this->textdomain),
+                    'label'       => __('Date Created', 'atr-wc-order-notifier'),
+                    'description' => __('Include Order Creation Date in the message', 'atr-wc-order-notifier'),
                     'type'        => 'checkbox',
                     'default'     => 'off',
                 ),
                 array(
                     'id'          => 'date_modified_in_message',
-                    'label'       => __('Date Modified', $this->textdomain),
-                    'description' => __('Include Order Modification Date in the message', $this->textdomain),
+                    'label'       => __('Date Modified', 'atr-wc-order-notifier'),
+                    'description' => __('Include Order Modification Date in the message', 'atr-wc-order-notifier'),
                     'type'        => 'checkbox',
                     'default'     => 'off',
                 ),
                 array(
                     'id'          => 'product_name_in_message',
-                    'label'       => __('Product Name', $this->textdomain),
-                    'description' => __('Include Product Name(s) in the message', $this->textdomain),
+                    'label'       => __('Product Name', 'atr-wc-order-notifier'),
+                    'description' => __('Include Product Name(s) in the message', 'atr-wc-order-notifier'),
                     'type'        => 'checkbox',
                     'default'     => 'off',
                 ),
                 array(
                     'id'          => 'product_quantity_in_message',
-                    'label'       => __('Product Quantity', $this->textdomain),
-                    'description' => __('Include Product Quantity in the message', $this->textdomain),
+                    'label'       => __('Product Quantity', 'atr-wc-order-notifier'),
+                    'description' => __('Include Product Quantity in the message', 'atr-wc-order-notifier'),
                     'type'        => 'checkbox',
                     'default'     => 'off',
                 ),
                 array(
                     'id'          => 'payment_method_in_message',
-                    'label'       => __('Payment Method', $this->textdomain),
-                    'description' => __('Include Payment Method in the message', $this->textdomain),
+                    'label'       => __('Payment Method', 'atr-wc-order-notifier'),
+                    'description' => __('Include Payment Method in the message', 'atr-wc-order-notifier'),
                     'type'        => 'checkbox',
                     'default'     => 'off',
                 ),
                 array(
                     'id'          => 'customer_note_in_message',
-                    'label'       => __('Customer Note', $this->textdomain),
-                    'description' => __('Include Customer Note in the message', $this->textdomain),
+                    'label'       => __('Customer Note', 'atr-wc-order-notifier'),
+                    'description' => __('Include Customer Note in the message', 'atr-wc-order-notifier'),
                     'type'        => 'checkbox',
                     'default'     => 'off',
                 ),
                 array(
                     'id'          => 'order_link_in_message',
-                    'label'       => __('Order Link', $this->textdomain),
-                    'description' => __('Include a clickable link to the order details in the message', $this->textdomain),
+                    'label'       => __('Order Link', 'atr-wc-order-notifier'),
+                    'description' => __('Include a clickable link to the order details in the message', 'atr-wc-order-notifier'),
                     'type'        => 'checkbox',
                     'default'     => 'off',
                 )
@@ -370,7 +379,7 @@ class Atr_Wc_Order_Notifier_Admin_Settings
     public function settings_section($section)
     {
         $html = '<p> ' . $this->settings[$section['id']]['description'] . '</p>' . "\n";
-        echo $html;
+        echo esc_html( $html );
     }
 
     /**
@@ -397,7 +406,7 @@ class Atr_Wc_Order_Notifier_Admin_Settings
                 // Special handling for the Bot Token field
                 if ($field['id'] === 'atr_wc_notifier_telegram_bot_token') {
                     $html .= '<input id="' . esc_attr($field['id']) . '" type="text" name="' . esc_attr($option_name) . '" placeholder="' . esc_attr($field['placeholder']) . '" value="" />' . "\n";
-                    $html .= '<p class="description">' . __('Enter your Telegram Bot Token. If left empty, the current token will be retained.', $this->textdomain) . '</p>';
+                    $html .= '<p class="description">' . __('Enter your Telegram Bot Token. If left empty, the current token will be retained.', 'atr-wc-order-notifier') . '</p>';
                 } else {
                     $html .= '<input id="' . esc_attr($field['id']) . '" type="' . $field['type'] . '" name="' . esc_attr($option_name) . '" placeholder="' . esc_attr($field['placeholder']) . '" value="' . esc_attr($data) . '"/>' . "\n";
                 }
@@ -492,7 +501,7 @@ class Atr_Wc_Order_Notifier_Admin_Settings
                 break;
         }
 
-        echo $html;
+        echo esc_html( $html );
     }
 
     /**
@@ -562,15 +571,15 @@ class Atr_Wc_Order_Notifier_Admin_Settings
         // Build page HTML output
         // If you don't need tabbed navigation just strip out everything between the <!-- Tab navigation --> tags.
 ?>
-        <div class="wrap" id="<?php echo $this->plugin_slug; ?>">
-            <h2><?php _e('ATR WooCommerce Order Notifier Settings', $this->textdomain); ?></h2>
-            <p><?php _e('Settings.', $this->textdomain); ?></p>
+        <div class="wrap" id="<?php echo esc_html($this->plugin_slug); ?>">
+            <h2><?php esc_attr_e('ATR WooCommerce Order Notifier Settings', 'atr-wc-order-notifier'); ?></h2>
+            <p><?php esc_attr_e('Settings.', 'atr-wc-order-notifier'); ?></p>
 
             <!-- Tab navigation starts -->
             <h2 class="nav-tab-wrapper settings-tabs hide-if-no-js">
                 <?php
                 foreach ($this->settings as $section => $data) {
-                    echo '<a href="#' . $section . '" class="nav-tab">' . $data['title'] . '</a>';
+                    echo '<a href="#' . esc_html($section) . '" class="nav-tab">' . esc_html($data['title']) . '</a>';
                 }
                 ?>
             </h2>

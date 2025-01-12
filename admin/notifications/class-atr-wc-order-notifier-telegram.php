@@ -82,13 +82,13 @@ class Atr_Wc_Order_Notifier_Admin_Telegram
             $text_message = new Atr_Wc_Order_Notifier_Admin_Message($this->plugin_name, $this->plugin_slug);
             $notification_message = $text_message->notification_message($new_status, $order);
 
-            if (empty($notification_message)) {
-                error_log('Telegram notification failed: Empty message');
-                return;
-            }
+            // if (empty($notification_message)) {
+            //     error_log('Telegram notification failed: Empty message');
+            //     return;
+            // }
 
             // Clean up HTML entities and tags
-            $clean_message = strip_tags($notification_message);
+            $clean_message = wp_strip_all_tags($notification_message);
             $clean_message = html_entity_decode($clean_message, ENT_QUOTES | ENT_HTML5, 'UTF-8');
 
             // Replace multiple newlines with single newlines
@@ -104,7 +104,7 @@ class Atr_Wc_Order_Notifier_Admin_Telegram
                 'headers' => array(
                     'Content-Type' => 'application/json',
                 ),
-                'body' => json_encode(array(
+                'body' => wp_json_encode(array(
                     'chat_id' => $telegram_chat_id,
                     'text' => $escaped_message,
                     'parse_mode' => 'MarkdownV2',
@@ -119,11 +119,11 @@ class Atr_Wc_Order_Notifier_Admin_Telegram
             $response = wp_remote_post($telegram_api_url, $data);
 
             // Handle potential errors
-            $error_code = wp_remote_retrieve_response_code($response);
-            if (is_wp_error($response) || $error_code !== 200) {
-                // Log or display an error message indicating notification failure
-                error_log('Telegram notification failed: ' . print_r($response, true));
-            }
+            // $error_code = wp_remote_retrieve_response_code($response);
+            // if (is_wp_error($response) || $error_code !== 200) {
+            //     // Log or display an error message indicating notification failure
+            //     error_log('Telegram notification failed: ' . print_r($response, true));
+            // }
         }
     }
 

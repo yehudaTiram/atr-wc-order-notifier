@@ -13,7 +13,7 @@
  * @package           Atr_Wc_Order_Notifier
  *
  * @wordpress-plugin
- * Plugin Name:       ATR WooCommerce Order Notifier
+ * Plugin Name:       ATR Shop Order Notifier for Woocommerce
  * Plugin URI:        https://atarimtr.co.il
  * Description:       Sends notifications for WooCommerce order events to Telegram, Slack, (and other platforms).
  * Version:           1.0.0
@@ -21,7 +21,7 @@
  * Author URI:        https://atarimtr.co.il/
  * License:           GPL-2.0+
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
- * Text Domain:       atr-wc-order-notifier
+ * Text Domain:       atr-shop-order-notifier
  * Domain Path:       /languages
  */
 
