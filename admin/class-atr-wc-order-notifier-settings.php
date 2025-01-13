@@ -379,7 +379,7 @@ class Atr_Wc_Order_Notifier_Admin_Settings
     public function settings_section($section)
     {
         $html = '<p> ' . $this->settings[$section['id']]['description'] . '</p>' . "\n";
-        echo esc_html( $html );
+        echo $html;
     }
 
     /**
@@ -501,7 +501,7 @@ class Atr_Wc_Order_Notifier_Admin_Settings
                 break;
         }
 
-        echo esc_html( $html );
+        echo $html;
     }
 
     /**
