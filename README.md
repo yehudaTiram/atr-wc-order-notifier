@@ -1,4 +1,4 @@
-# Tjis is outdated!!! Do not use this one. checkout the plugin in Wordpress repository. That will enable you features and security updates.
+# This is outdated!!! Do not use this one. checkout the plugin in Wordpress repository. That will enable you features and security updates.
 
 https://wordpress.org/plugins/atr-notifier/
 
