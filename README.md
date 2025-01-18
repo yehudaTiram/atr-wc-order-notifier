@@ -1,3 +1,7 @@
+# Tjis is outdated!!! Do not use this one. checkout the plugin in Wordpress repository. That will enable you features and security updates.
+
+https://wordpress.org/plugins/atr-notifier/
+
 # ATR WooCommerce Order Notifier
 ## Description
 A plugin to enhance your eCommerce operations by seamlessly integrating your WooCommerce store with Telegram. 
